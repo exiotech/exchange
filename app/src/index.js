@@ -9,7 +9,22 @@ import { Drizzle, generateStore } from "drizzle";
 import ExioExChange from "./contracts/ExioExChange.json";
 
 // let drizzle know what contracts we want
-const options = { contracts: [ExioExChange] };
+const options = {
+  web3: {
+    block: false,
+    fallback: {
+      type: "ws",
+      url: "ws://127.0.0.1:7545",
+    },
+  },
+  contracts: [ExioExChange],
+  events: {
+    ExioExChange: ["Order", "Cancel", "Trade", "Deposit", "Withdraw"],
+  },
+  polls: {
+    accounts: 1500,
+  },
+};
 
 // setup the drizzle store and drizzle
 const drizzleStore = generateStore(options);
