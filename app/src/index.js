@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 // import drizzle functions and contract artifact
 import { Drizzle, generateStore } from "drizzle";
+// import { DrizzleContext } from "drizzle-react";
 import ExioExChange from "./contracts/ExioExChange.json";
 
 // let drizzle know what contracts we want

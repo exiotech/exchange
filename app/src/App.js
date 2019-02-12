@@ -4,6 +4,7 @@ import './App.css';
 
 import ReadOwner from "./ReadOwner";
 import SetOwner from "./SetOwner";
+import Deposit from "./components/Deposit";
 
 class App extends Component {
   state = { loading: true, drizzleState: null };
@@ -32,6 +33,7 @@ class App extends Component {
     if (this.state.loading) return "Loading Drizzle...";
     return (
       <div className="App">
+        <img src={logo} with="30" height="30" alt="" />
         <ReadOwner
           drizzle={this.props.drizzle}
           drizzleState={this.state.drizzleState}
@@ -40,6 +42,10 @@ class App extends Component {
           drizzle={this.props.drizzle}
           drizzleState={this.state.drizzleState}
         />
+        <br />
+        <section>
+          <Deposit drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
+        </section>
       </div>
     );
   }
