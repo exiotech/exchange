@@ -51,7 +51,7 @@ class App extends Component {
         </section>
         <br />
         <section>
-          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
+          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address="0x0"/>
         </section>
         <br />
         <section>
@@ -60,6 +60,10 @@ class App extends Component {
         <br />
         <section>
           <DepositToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
+        </section>
+        <br />
+        <section>
+          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address="0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592" />
         </section>
       </div>
     );
