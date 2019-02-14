@@ -79,7 +79,7 @@ contract ExioExChange {
   function withdraw(uint256 amount) public {
     require(tokens[address(0)][msg.sender] >= amount);
     tokens[address(0)][msg.sender] = SafeMath.sub(tokens[address(0)][msg.sender], amount);
-    // require(msg.sender.call.value(amount)(""));
+    require(msg.sender.send(amount));
     emit Withdraw(address(0), msg.sender, amount, tokens[address(0)][msg.sender]);
   }
 
