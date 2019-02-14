@@ -7,6 +7,7 @@ import SetOwner from "./SetOwner";
 import Deposit from "./components/Deposit";
 import Balance from "./components/Balance";
 import Withdraw from "./components/Withdraw";
+import DepositToken from "./components/DepositToken";
 
 class App extends Component {
   state = { loading: true, drizzleState: null };
@@ -55,6 +56,10 @@ class App extends Component {
         <br />
         <section>
           <Withdraw drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
+        </section>
+        <br />
+        <section>
+          <DepositToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
         </section>
       </div>
     );
