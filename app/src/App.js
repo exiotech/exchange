@@ -38,7 +38,7 @@ class App extends Component {
     if (this.state.loading) return "Loading Drizzle...";
     return (
       <div className="App">
-        <Baner logo={logo} />
+        <Baner drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} logo={logo} />
         <img src={logo} with="30" height="30" alt="" />
         <ReadOwner
           drizzle={this.props.drizzle}
@@ -72,9 +72,9 @@ class App extends Component {
         <section>
           <WithdrawToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address="0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592" />
         </section>
-        <script src="https://unpkg.com/react/umd/react.production.js" crossorigin />
-        <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossorigin />
-        <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossorigin />
+        <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
+        <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />
+        <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossOrigin="true" />
       </div>
     );
   }
