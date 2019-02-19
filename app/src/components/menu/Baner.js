@@ -1,25 +1,37 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
-import data from './../../data.json';
+import { tokens } from './../../data.json';
 
 class Baner extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props)
+    this.state = {
+      activeKey: tokens[0].address
+    }
+    // console.log(props)
 
     this.handleSelect = this.handleSelect.bind(this);
   }
 
   handleSelect(eventKey) {
-    this.props.drizzleState.token = eventKey;
+    this.setState({ activeKey: eventKey });
+    this.props.onSelectToken(eventKey);
+  }
+
+  findTokenName = (address) => {
+    return tokens.find(token => {
+      return token.address === address;
+    }).name
   }
 
   render() {
     const { logo } = this.props;
-    const item = data.tokens.map((token) =>
-      <NavDropdown.Item key={token.address} eventKey={token.address}>{token.name}</NavDropdown.Item>
+    const item = tokens.map(token =>
+       <NavDropdown.Item key={token.address} eventKey={token.address}>{token.name}</NavDropdown.Item>
     );
+    const title = this.findTokenName(this.state.activeKey);
+
     return (
       <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
         <Navbar.Brand href="/">
@@ -28,8 +40,8 @@ class Baner extends React.Component {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="mr-auto" onSelect={k => this.handleSelect(k)}>
-            <NavDropdown title="Tokens" id="nav-dropdown" >
+          <Nav className="mr-auto" activeKey={this.state.activeKey} onSelect={k => this.handleSelect(k)}>
+            <NavDropdown title={title} id="nav-dropdown" >
               {item}
             </NavDropdown>
           </Nav>

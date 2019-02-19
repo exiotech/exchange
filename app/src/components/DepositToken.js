@@ -23,12 +23,12 @@ class DepositToken extends React.Component {
   }
 
   setValue = value => {
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle, drizzleState, address } = this.props;
     const contract = drizzle.contracts.ExioExChange;
-    const tokenAddress = '0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592';
+    // const tokenAddress = '0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592';
 
     // let drizzle know we want to call the `set` method with `value`
-    const stackId = contract.methods["depositToken"].cacheSend(tokenAddress, value, {
+    const stackId = contract.methods["depositToken"].cacheSend(address, value, {
       from: drizzleState.accounts[0]
     });
 

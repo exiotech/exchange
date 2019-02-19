@@ -23,9 +23,8 @@ class WithdrawToken extends React.Component {
   }
 
   setValue = value => {
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle, drizzleState, address } = this.props;
     const contract = drizzle.contracts.ExioExChange;
-    const { address } = this.props;
 
     // let drizzle know we want to call the `set` method with `value`
     const stackId = contract.methods["withdrawToken"].cacheSend(address, value, {

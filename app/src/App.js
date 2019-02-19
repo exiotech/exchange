@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './exio.png';
 import './App.css';
 
+import { tokens } from './data.json';
 import ReadOwner from "./ReadOwner";
 import SetOwner from "./SetOwner";
 import Baner from "./components/menu/Baner";
@@ -12,7 +13,7 @@ import DepositToken from "./components/DepositToken";
 import WithdrawToken from "./components/WithdrawToken";
 
 class App extends Component {
-  state = { loading: true, drizzleState: null };
+  state = { loading: true, drizzleState: null, tokenAddress: tokens[0].address };
 
   componentDidMount() {
     const { drizzle } = this.props;
@@ -34,12 +35,15 @@ class App extends Component {
     this.unsubscribe();
   }
 
+  handleTokenAddress = (address) => {
+      this.setState({tokenAddress: address});
+  }
+
   render() {
     if (this.state.loading) return "Loading Drizzle...";
     return (
       <div className="App">
-        <Baner drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} logo={logo} />
-        <img src={logo} with="30" height="30" alt="" />
+        <Baner drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} logo={logo} onSelectToken={this.handleTokenAddress} />
         <ReadOwner
           drizzle={this.props.drizzle}
           drizzleState={this.state.drizzleState}
@@ -62,15 +66,15 @@ class App extends Component {
         </section>
         <br />
         <section>
-          <DepositToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
+          <DepositToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
         </section>
         <br />
         <section>
-          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address="0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592" />
+          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
         </section>
         <br />
         <section>
-          <WithdrawToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address="0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592" />
+          <WithdrawToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
         </section>
         <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />
