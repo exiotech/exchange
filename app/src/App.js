@@ -11,6 +11,7 @@ import Balance from "./components/Balance";
 import Withdraw from "./components/Withdraw";
 import DepositToken from "./components/DepositToken";
 import WithdrawToken from "./components/WithdrawToken";
+import Order from "./components/Order";
 
 class App extends Component {
   state = { loading: true, drizzleState: null, tokenAddress: tokens[0].address };
@@ -75,6 +76,10 @@ class App extends Component {
         <br />
         <section>
           <WithdrawToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
+        </section>
+        <br />
+        <section>
+          <Order drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
         </section>
         <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />
