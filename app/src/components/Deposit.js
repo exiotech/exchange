@@ -1,11 +1,12 @@
 import React from "react";
+import { Form, Button } from 'react-bootstrap';
 
 class Deposit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       stackId: null,
-      value: ''
+      value: '',
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -45,23 +46,26 @@ class Deposit extends React.Component {
     // if transaction hash does not exist, don't display anything
     if (!txHash) return null;
     if (!transactions[txHash]) return null;
-    
+
     // otherwise, return the transaction status
-    return `Transaction status: ${transactions[txHash].status}`;
+    return transactions[txHash].status;
   };
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Deposit:
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-        <div>{this.getTxStatus()}</div>
-      </div>
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Row>
+          <Form.Group controlId="deposit">
+            <Form.Control type="number" placeholder="Amount" value={this.state.value} onChange={this.handleChange} />
+            <Form.Text className="text-muted text-left">
+              Deposit ETH {this.getTxStatus()}
+            </Form.Text>
+          </Form.Group>
+          <Form.Group className="">
+            <Button type="submit">Deposit</Button>
+          </Form.Group>
+        </Form.Row>
+      </Form>
     );
   }
 }
