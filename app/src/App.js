@@ -45,14 +45,6 @@ class App extends Component {
     return (
       <div className="App">
         <Baner drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} logo={logo} onSelectToken={this.handleTokenAddress} />
-        <ReadOwner
-          drizzle={this.props.drizzle}
-          drizzleState={this.state.drizzleState}
-        />
-        <SetOwner
-          drizzle={this.props.drizzle}
-          drizzleState={this.state.drizzleState}
-        />
         <br />
         <section>
           <Deposit drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />

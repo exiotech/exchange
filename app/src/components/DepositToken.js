@@ -1,4 +1,5 @@
 import React from "react";
+import { Form, Button } from 'react-bootstrap';
 
 class DepositToken extends React.Component {
   constructor(props) {
@@ -47,21 +48,24 @@ class DepositToken extends React.Component {
     if (!transactions[txHash]) return null;
 
     // otherwise, return the transaction status
-    return `Transaction status: ${transactions[txHash].status}`;
+    return transactions[txHash].status;
   };
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            DepositToken:
-            <input type="text" value={this.state.value} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-        <div>{this.getTxStatus()}</div>
-      </div>
+      <Form onSubmit={this.handleSubmit}>
+        <Form.Row>
+          <Form.Group controlId="deposit">
+            <Form.Control type="number" placeholder="Amount" value={this.state.value} onChange={this.handleChange} />
+            <Form.Text className="text-muted text-left">
+              Deposit Token {this.getTxStatus()}
+            </Form.Text>
+          </Form.Group>
+          <Form.Group className="">
+            <Button type="submit">Deposit</Button>
+          </Form.Group>
+        </Form.Row>
+      </Form>
     );
   }
 }
