@@ -3,15 +3,12 @@ import logo from './exio.png';
 import './App.css';
 
 import { tokens } from './data.json';
-import ReadOwner from "./ReadOwner";
-import SetOwner from "./SetOwner";
+// import ReadOwner from "./ReadOwner";
+// import SetOwner from "./SetOwner";
 import Baner from "./components/menu/Baner";
-import Deposit from "./components/Deposit";
-import Balance from "./components/Balance";
-import Withdraw from "./components/Withdraw";
-import DepositToken from "./components/DepositToken";
-import WithdrawToken from "./components/WithdrawToken";
+import Balances from "./components/Balances";
 import Order from "./components/Order";
+// import Table from "./components/Balance/Table";
 
 class App extends Component {
   state = { loading: true, drizzleState: null, tokenAddress: tokens[0].address };
@@ -47,27 +44,7 @@ class App extends Component {
         <Baner drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>
-          <Deposit drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
-        </section>
-        <br />
-        <section>
-          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address="0x0"/>
-        </section>
-        <br />
-        <section>
-          <Withdraw drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />
-        </section>
-        <br />
-        <section>
-          <DepositToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
-        </section>
-        <br />
-        <section>
-          <Balance drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
-        </section>
-        <br />
-        <section>
-          <WithdrawToken drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
+          <Balances drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
         </section>
         <br />
         <section>

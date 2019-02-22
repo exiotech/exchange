@@ -11,7 +11,7 @@ class Balance extends React.Component {
   componentDidMount() {
     const { drizzle, drizzleState, address } = this.props;
     const contract = drizzle.contracts.ExioExChange;
-    
+
     const dataKey = contract.methods["balanceOf"].cacheCall(address, drizzleState.accounts[0]);
     // let drizzle know we want to watch the `myString` method
 
@@ -41,12 +41,13 @@ class Balance extends React.Component {
 
     // using the saved `dataKey`, get the variable we're interested in
     let balance = ExioExChange.balanceOf[this.state.dataKey];
-    if(address === '0x0')
-      balance = balance && web3.utils.fromWei(balance.value);
+    if(address === '0x0') {
+      balance = balance && parseInt(web3.utils.fromWei(balance.value)).toFixed(2);
+    }
     else
       balance = balance && balance.value;
     // if it exists, then we display its value
-    return <p>Account Deposit Token: {balance}</p>;
+    return (<span>{balance}</span>);
   }
 }
 
