@@ -57,18 +57,20 @@ class Content extends React.Component {
 
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const {drizzle, tokenAddress} = this.props;
-  //
-  //   if (this.props.drizzle === prevProps.drizzle) {
-  //     return;
-  //   }
-  //
-  //   const contract = drizzle.contracts.TokenContract;
-  //   const tokenBalance = contract.methods["balanceOf"].cacheCall(tokenAddress);
-  //   console.log(tokenBalance);
-  //   this.setState({ tokenBalance });
-  // }
+  componentDidUpdate(prevProps) {
+    const { drizzle, drizzleState, tokenAddress } = this.props;
+    if ((tokenAddress !== prevProps.tokenAddress)) {
+      const contract = drizzle.contracts.TokenContract;
+
+      const balance = contract.methods["balanceOf"].cacheCall(drizzleState.accounts[0]);
+      // let drizzle know we want to watch the `myString` method
+
+      // save the `dataKey` to local component state for later reference
+      this.setState({ tokenBalanceKey: balance });
+      this.getTokenBalance(balance);
+    }
+    return;
+  }
 
   render() {
     const {drizzle, tokenAddress, tab } = this.props;
