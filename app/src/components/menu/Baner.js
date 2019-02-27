@@ -1,13 +1,16 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
+import exioabi from '../../ExioToken.json';
+import testabi from '../../TestToken.json';
 import { tokens } from './../../data.json';
 
 class Baner extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey: tokens[0].address
+      activeKey: tokens[0].address,
+      TokenContract: false,
     }
     // console.log(props)
 
@@ -17,6 +20,8 @@ class Baner extends React.Component {
   handleSelect(eventKey) {
     this.setState({ activeKey: eventKey });
     this.props.onSelectToken(eventKey);
+    this.deleteTokenContract('TokenContract');
+    this.addTokenContract(eventKey);
   }
 
   findTokenName = (address) => {
@@ -25,7 +30,34 @@ class Baner extends React.Component {
     }).name
   }
 
+  componentDidMount() {
+    this.addTokenContract(this.state.activeKey);
+  }
+
+  addTokenContract = (address) => {
+    const { drizzle } = this.props;
+    let abi;
+
+    if(address === '0xe5F97f7F219d52402BE184565b7f24CF42a1A0a9')
+      abi = exioabi.abi;
+    else
+      abi = testabi.abi;
+
+    const contractConfig = {
+      contractName: 'TokenContract',
+      web3Contract: new drizzle.web3.eth.Contract(abi, address)
+    }
+    const events = ['Transfer', 'Approval'];
+    drizzle.addContract(contractConfig, events);
+  }
+
+  deleteTokenContract = (name) => {
+    this.props.drizzle.deleteContract(name);
+  }
+
   render() {
+    // console.log(this.props.drizzle.contracts.TokenContract);
+
     const { logo } = this.props;
     const item = tokens.map(token =>
        <NavDropdown.Item key={token.address} eventKey={token.address}>{token.name}</NavDropdown.Item>

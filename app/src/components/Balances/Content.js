@@ -9,7 +9,7 @@ import Withdraw from "../Withdraw";
 import WithdrawToken from "../WithdrawToken";
 
 class Content extends React.Component {
-  state = { dataKey: null, balance: 0 };
+  state = { dataKey: null, balance: 0, tokenBalanceKey: null, tokenBalance: null };
 
   findTokenName = (address) => {
     return tokens.find(token => {
@@ -26,12 +26,49 @@ class Content extends React.Component {
     return balance;
   }
 
+  getTokenBalance = async (key) => {
+    if(this.props.drizzleState.contracts.TokenContract) {
+      const balanceInterval = setInterval(async () => {
+        let bal = this.props.drizzleState.contracts.TokenContract.balanceOf[key];
+
+        if(bal) {
+          this.setState({ tokenBalance: bal.value });
+          clearInterval(balanceInterval);
+        }
+      }, 100);
+    }
+  }
+
   componentDidMount() {
     this.getBalance(this.props.tokenAddress).then(bal => {
       this.setState({balance: (bal / 1000000000000000000).toFixed(2)});
     });
 
+    const intervalID = setInterval(async () => {
+      if(this.props.drizzle.contracts.TokenContract) {
+        const contract = this.props.drizzle.contracts.TokenContract;
+        const balance = contract.methods["balanceOf"].cacheCall(this.props.drizzleState.accounts[0]);
+
+        this.setState({ tokenBalanceKey: balance });
+        await this.getTokenBalance(balance);
+        clearInterval(intervalID);
+      }
+    }, 100);
+
   }
+
+  // componentDidUpdate(prevProps) {
+  //   const {drizzle, tokenAddress} = this.props;
+  //
+  //   if (this.props.drizzle === prevProps.drizzle) {
+  //     return;
+  //   }
+  //
+  //   const contract = drizzle.contracts.TokenContract;
+  //   const tokenBalance = contract.methods["balanceOf"].cacheCall(tokenAddress);
+  //   console.log(tokenBalance);
+  //   this.setState({ tokenBalance });
+  // }
 
   render() {
     const {drizzle, tokenAddress, tab } = this.props;
@@ -59,7 +96,7 @@ class Content extends React.Component {
         <tbody>
           <tr>
             <td>{this.findTokenName(tokenAddress)}</td>
-            <td>{this.state.balance}</td>
+            <td>{this.state.tokenBalance}</td>
             <td><Balance drizzle={drizzle} drizzleState={this.props.drizzleState} address={tokenAddress} /></td>
           </tr>
           <tr>

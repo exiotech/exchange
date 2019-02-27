@@ -21,7 +21,7 @@ class DepositToken extends React.Component {
     const { drizzle } = this.props;
     let abi;
 
-    if(this.props.address === '0xAFC5cd00b63Cea23973FA85CD72Ab50B17Be8592')
+    if(this.props.address === '0xe5F97f7F219d52402BE184565b7f24CF42a1A0a9')
       abi = exioabi.abi;
     else
       abi = testabi.abi;
