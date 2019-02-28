@@ -3,8 +3,8 @@ import { Table } from 'react-bootstrap';
 
 import { tokens } from '../../data.json';
 
-class Content extends React.Component {
-  state = { events: [], transactionHash: null, type: null, amount: '', tokenAmount: '' };
+class Funds extends React.Component {
+  state = { events: [] };
 
   findTokenName = (address) => {
     return tokens.find(token => {
@@ -43,7 +43,7 @@ class Content extends React.Component {
   render() {
     const {tokenAddress} = this.props;
     let row;
-    
+
     if(this.state.events)
       row = this.state.events.map((event, index) => {
         if(index > 0 && this.state.events[index - 1].transactionHash === event.transactionHash) {
@@ -78,4 +78,4 @@ class Content extends React.Component {
   }
 }
 
-export default Content;
+export default Funds;
