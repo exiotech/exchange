@@ -7,6 +7,7 @@ import { tokens } from './data.json';
 // import SetOwner from "./SetOwner";
 import Baner from "./components/menu/Baner";
 import Balances from "./components/Balances";
+import Transaction from "./components/Transaction";
 import Order from "./components/Order";
 // import Table from "./components/Balance/Table";
 
@@ -45,6 +46,10 @@ class App extends Component {
         <br />
         <section>
           <Balances drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
+        </section>
+        <br />
+        <section>
+          <Transaction drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
         </section>
         <br />
         <section>
