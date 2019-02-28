@@ -8,7 +8,7 @@ import { tokens } from './data.json';
 import Baner from "./components/menu/Baner";
 import Balances from "./components/Balances";
 import Transaction from "./components/Transaction";
-import Order from "./components/Order";
+import Orders from "./components/Orders";
 // import Table from "./components/Balance/Table";
 
 class App extends Component {
@@ -49,11 +49,11 @@ class App extends Component {
         </section>
         <br />
         <section>
-          <Transaction drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
+          <Orders drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress} />
         </section>
         <br />
         <section>
-          <Order drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} address={this.state.tokenAddress} />
+          <Transaction drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
         </section>
         <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />
