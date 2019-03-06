@@ -2,6 +2,7 @@ import React from 'react';
 
 import Tab from "./Tab";
 import Funds from "./Funds";
+import Orders from "./Orders";
 
 class Transaction extends React.Component {
   state = { tab: 'trades' };
@@ -14,9 +15,11 @@ class Transaction extends React.Component {
     let tab;
     switch(this.state.tab) {
       case 'funds':
-        tab = <Funds drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} tab={this.state.tab} tokenAddress={this.props.tokenAddress}/>
+        tab = <Funds drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
         break;
-      case 'orders': tab = <div>orders</div>; break;
+      case 'orders':
+        tab = <Orders drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
+        break;
       default: tab = <div>trades</div>
     }
 

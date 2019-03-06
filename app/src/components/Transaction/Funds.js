@@ -21,6 +21,7 @@ class Funds extends React.Component {
       return;
 
     const event = this.props.drizzleState.contracts.ExioExChange.events[this.props.drizzleState.contracts.ExioExChange.events.length - 1];
+    console.log(event);
     const { web3 } = this.props.drizzle;
     const type = event.event;
     const { transactionHash } = event;
