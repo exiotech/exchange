@@ -12,7 +12,11 @@ import Orders from "./components/Orders";
 // import Table from "./components/Balance/Table";
 
 class App extends Component {
-  state = { loading: true, drizzleState: null, tokenAddress: tokens[0].address };
+  state = {
+    loading: true,
+    drizzleState: null,
+    tokenAddress: tokens[0].address
+  };
 
   componentDidMount() {
     const { drizzle } = this.props;

@@ -1,39 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { BrowserRouter as Router } from 'react-router-dom'
+// import { Drizzle, generateStore } from "drizzle";
+import { generateContractsInitialState } from 'drizzle'
 
-// import drizzle functions and contract artifact
-import { Drizzle, generateStore } from "drizzle";
-// import { DrizzleContext } from "drizzle-react";
-import ExioExChange from "./contracts/ExioExChange.json";
+import Root from './containers/Root'
+import configureStore from './store/configureStore'
+import drizzleOptions from './drizzleOptions.js'
 
-// let drizzle know what contracts we want
-const options = {
-  web3: {
-    block: false,
-    fallback: {
-      type: "ws",
-      url: "ws://127.0.0.1:7545",
-    },
-  },
-  contracts: [ExioExChange],
-  events: {
-    ExioExChange: ["Order", "Cancel", "Trade", "Deposit", "Withdraw"],
-  },
-  polls: {
-    accounts: 1500,
-  },
-};
+const preloadedState = {
+  contracts: generateContractsInitialState(drizzleOptions)
+}
 
-// setup the drizzle store and drizzle
-const drizzleStore = generateStore(options);
-const drizzle = new Drizzle(options, drizzleStore);
+const store = configureStore(preloadedState)
 
-ReactDOM.render(<App drizzle={drizzle} />, document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+ReactDOM.render(
+  <Router>
+    <Root drizzleOptions={drizzleOptions} store={store}/>
+  </Router>,
+  document.getElementById('root')
+);
