@@ -6,23 +6,17 @@ import { generateContractsInitialState } from 'drizzle'
 
 import Root from './containers/Root'
 import configureStore from './store/configureStore'
-
-// import App from './App';
-import drizzleOption from './drizzleOptions.js'
-
-// setup the drizzle store and drizzle
-// const drizzleStore = generateStore(drizzleOption);
-// const drizzle = new Drizzle(drizzleOption, drizzleStore);
+import drizzleOptions from './drizzleOptions.js'
 
 const preloadedState = {
-   contracts: generateContractsInitialState(drizzleOption)
- }
+  contracts: generateContractsInitialState(drizzleOptions)
+}
 
 const store = configureStore(preloadedState)
 
 ReactDOM.render(
   <Router>
-    <Root store={store} />
+    <Root drizzleOptions={drizzleOptions} store={store}/>
   </Router>,
   document.getElementById('root')
 );
