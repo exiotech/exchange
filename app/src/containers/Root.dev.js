@@ -1,20 +1,24 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { DrizzleProvider } from 'drizzle-react'
-import { Route } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
+import { generateContractsInitialState } from 'drizzle'
 
 import App from './App'
+import configureStore from '../store/configureStore'
+import drizzleOptions from '../drizzleOptions.js'
 
-const Root = ({ store, drizzleOptions }) => (
+const preloadedState = {
+  contracts: generateContractsInitialState(drizzleOptions)
+}
+
+const store = configureStore(preloadedState)
+
+const Root = () => (
   <DrizzleProvider options={drizzleOptions} store={store}>
-    <div>
-      <Route path="/" component={App} />
-    </div>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </DrizzleProvider>
 )
-
-Root.propTypes = {
-  store: PropTypes.object.isRequired,
-}
 
 export default Root
