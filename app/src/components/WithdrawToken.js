@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
 
 class WithdrawToken extends React.Component {
@@ -24,12 +26,12 @@ class WithdrawToken extends React.Component {
   }
 
   setValue = value => {
-    const { drizzle, drizzleState, address } = this.props;
+    const { drizzle, address, accounts } = this.props;
     const contract = drizzle.contracts.ExioExChange;
 
     // let drizzle know we want to call the `set` method with `value`
     const stackId = contract.methods["withdrawToken"].cacheSend(address, value, {
-      from: drizzleState.accounts[0]
+      from: accounts[0]
     });
 
     // save the `stackId` for later reference
@@ -38,7 +40,7 @@ class WithdrawToken extends React.Component {
 
   getTxStatus = () => {
     // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props.drizzleState;
+    const { transactions, transactionStack } = this.props;
 
     // get the transaction hash using our saved `stackId`
     const txHash = transactionStack[this.state.stackId];
@@ -70,4 +72,19 @@ class WithdrawToken extends React.Component {
   }
 }
 
-export default WithdrawToken;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3,
+    contracts: state.contracts,
+    transactions: state.transactions,
+    transactionStack: state.transactionStack,
+  }
+}
+
+
+export default drizzleConnect(
+    withRouter(WithdrawToken),
+    mapStateToProps,
+);

@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Table } from 'react-bootstrap';
 
 import { tokens } from '../../data.json';
@@ -19,17 +21,17 @@ class Content extends React.Component {
 
   getBalance = async (address) => {
     const { web3 } = this.props.drizzle;
-    const { drizzleState } = this.props;
+    const { accounts } = this.props;
 
-    const balance = await web3.eth.getBalance(drizzleState.accounts[0]);
+    const balance = await web3.eth.getBalance(accounts[0]);
 
     return balance;
   }
 
   getTokenBalance = async (key) => {
-    if(this.props.drizzleState.contracts.TokenContract) {
+    if(this.props.contracts.TokenContract) {
       const balanceInterval = setInterval(async () => {
-        let bal = this.props.drizzleState.contracts.TokenContract.balanceOf[key];
+        let bal = this.props.contracts.TokenContract.balanceOf[key];
 
         if(bal) {
           this.setState({ tokenBalance: bal.value });
@@ -47,7 +49,7 @@ class Content extends React.Component {
     const intervalID = setInterval(async () => {
       if(this.props.drizzle.contracts.TokenContract) {
         const contract = this.props.drizzle.contracts.TokenContract;
-        const balance = contract.methods["balanceOf"].cacheCall(this.props.drizzleState.accounts[0]);
+        const balance = contract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
 
         this.setState({ tokenBalanceKey: balance });
         await this.getTokenBalance(balance);
@@ -58,11 +60,11 @@ class Content extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { drizzle, drizzleState, tokenAddress } = this.props;
+    const { drizzle, tokenAddress, accounts } = this.props;
     if ((tokenAddress !== prevProps.tokenAddress)) {
       const contract = drizzle.contracts.TokenContract;
 
-      const balance = contract.methods["balanceOf"].cacheCall(drizzleState.accounts[0]);
+      const balance = contract.methods["balanceOf"].cacheCall(accounts[0]);
       // let drizzle know we want to watch the `myString` method
 
       // save the `dataKey` to local component state for later reference
@@ -77,11 +79,11 @@ class Content extends React.Component {
     let input1, input2;
 
     if(tab === 'deposit') {
-      input1 = <DepositToken drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} address={tokenAddress} />;
-      input2 = <Deposit drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} />;
+      input1 = <DepositToken drizzle={this.props.drizzle} address={tokenAddress} />;
+      input2 = <Deposit drizzle={this.props.drizzle} />;
     } else if(tab === 'withdraw') {
-      input1 = <WithdrawToken drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} address={tokenAddress} />;
-      input2 = <Withdraw drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} />;
+      input1 = <WithdrawToken drizzle={this.props.drizzle} address={tokenAddress} />;
+      input2 = <Withdraw drizzle={this.props.drizzle} />;
     } else {
       console.log(tab);
     }
@@ -99,7 +101,7 @@ class Content extends React.Component {
           <tr>
             <td>{this.findTokenName(tokenAddress)}</td>
             <td>{this.state.tokenBalance}</td>
-            <td><Balance drizzle={drizzle} drizzleState={this.props.drizzleState} address={tokenAddress} /></td>
+            <td><Balance drizzle={drizzle} address={tokenAddress} /></td>
           </tr>
           <tr>
             <td colSpan="3">{input1}</td>
@@ -107,7 +109,7 @@ class Content extends React.Component {
           <tr>
             <td>ETH</td>
             <td>{this.state.balance}</td>
-            <td><Balance drizzle={drizzle} drizzleState={this.props.drizzleState} address='0x0' /></td>
+            <td><Balance drizzle={drizzle} address='0x0' /></td>
           </tr>
           <tr>
             <td colSpan="3">{input2}</td>
@@ -118,4 +120,16 @@ class Content extends React.Component {
   }
 }
 
-export default Content;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3,
+    contracts: state.contracts,
+  }
+}
+
+export default drizzleConnect(
+    withRouter(Content),
+    mapStateToProps,
+);

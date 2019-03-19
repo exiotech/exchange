@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
 
 import exioabi from '../ExioToken.json';
@@ -21,7 +23,7 @@ class DepositToken extends React.Component {
     const { drizzle } = this.props;
     let abi;
 
-    if(this.props.address === '0xe5F97f7F219d52402BE184565b7f24CF42a1A0a9')
+    if(this.props.address === '0xd9E151BacB093a74C9790DC999b8f90C3698903d')
       abi = exioabi.abi;
     else
       abi = testabi.abi;
@@ -47,12 +49,12 @@ class DepositToken extends React.Component {
   }
 
   getApproval = value => {
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle, accounts } = this.props;
     const { ExioExChange } = drizzle.contracts;
     const { TokenContract } = drizzle.contracts;
 
     const approvalId = TokenContract.methods["approve"].cacheSend(ExioExChange.address, value, {
-      from: drizzleState.accounts[0]
+      from: accounts[0]
     });
 
     this.setState({ approvalId }, () => {
@@ -66,12 +68,12 @@ class DepositToken extends React.Component {
   }
 
   setValue = value => {
-    const { drizzle, drizzleState, address } = this.props;
+    const { drizzle, address, accounts } = this.props;
     const contract = drizzle.contracts.ExioExChange;
 
     // let drizzle know we want to call the `set` method with `value`
     const stackId = contract.methods["depositToken"].cacheSend(address, value, {
-      from: drizzleState.accounts[0]
+      from: accounts[0]
     });
 
     // save the `stackId` for later reference
@@ -80,7 +82,7 @@ class DepositToken extends React.Component {
 
   getTxStatus = (txId) => {
     // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props.drizzleState;
+    const { transactions, transactionStack } = this.props;
 
     // get the transaction hash using our saved `stackId`
     const txHash = transactionStack[txId];
@@ -111,4 +113,17 @@ class DepositToken extends React.Component {
   }
 }
 
-export default DepositToken;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3,
+    contracts: state.contracts,
+    transactions: state.transactions,
+    transactionStack: state.transactionStack,
+  }
+}
+export default drizzleConnect(
+    withRouter(DepositToken),
+    mapStateToProps,
+);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 
@@ -11,26 +11,27 @@ import Transaction from "../components/Transaction";
 import Orders from "../components/Orders";
 
 class App extends Component {
-  state = {
-    isLoading: false,
-    drizzleState: null,
-    tokenAddress: tokens[0].address
-  };
+  static contextTypes = {
+    drizzle: PropTypes.object
+  }
+
+  constructor(props, context) {
+    super(props)
+    this.state = {
+      isLoading: false,
+      drizzleState: null,
+      tokenAddress: tokens[0].address
+    };
+  }
 
   componentDidMount() {
-    console.log(this.props, 'props');
     const { store } = this.props;
 
-    // subscribe to changes in the store
     this.unsubscribe = store.subscribe(() => {
-
-      // every time the store updates, grab the state from drizzle
       const drizzleState = store.getState();
-      console.log(drizzleState, 'drizzleState1');
-      // check to see if it's ready, if so, update local component state
+
       if (drizzleState.drizzleStatus.initialized) {
         this.setState({ isLoading: true, drizzleState });
-        console.log(drizzleState, 'drizzleState');
       }
     });
   }
@@ -44,16 +45,15 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state, 'state');
-    if (!this.state.isLoading) return "Loading Drizzle...";
+    if(!this.state.isLoading) return 'Loading...'
     return (
       <div className="App">
-        {/*<Baner drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} logo={logo} onSelectToken={this.handleTokenAddress} />
+        <Baner drizzle={this.context.drizzle} logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>
-          <Balances drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
+          <Balances drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress}/>
         </section>
-        <br />
+        {/*<br />
         <section>
           <Orders drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress} />
         </section>
@@ -69,6 +69,13 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+  }
+}
+
 export default drizzleConnect(
     withRouter(App),
+    mapStateToProps,
 );

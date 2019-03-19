@@ -1,4 +1,7 @@
 import React from "react";
+// import PropTypes from 'prop-types'
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 import exioabi from '../../ExioToken.json';
@@ -6,15 +9,19 @@ import testabi from '../../TestToken.json';
 import { tokens } from './../../data.json';
 
 class Baner extends React.Component {
-  constructor(props) {
+  constructor(props, context) {
     super(props);
+
     this.state = {
       activeKey: tokens[0].address,
       TokenContract: false,
     }
-    // console.log(props)
 
     this.handleSelect = this.handleSelect.bind(this);
+  }
+
+  componentDidMount() {
+    this.addTokenContract(this.state.activeKey);
   }
 
   handleSelect(eventKey) {
@@ -30,15 +37,12 @@ class Baner extends React.Component {
     }).name
   }
 
-  componentDidMount() {
-    this.addTokenContract(this.state.activeKey);
-  }
-
   addTokenContract = (address) => {
-    const { drizzle } = this.props;
+    const { drizzle } = this.props
+
     let abi;
 
-    if(address === '0xe5F97f7F219d52402BE184565b7f24CF42a1A0a9')
+    if(address === '0xd9E151BacB093a74C9790DC999b8f90C3698903d')
       abi = exioabi.abi;
     else
       abi = testabi.abi;
@@ -56,8 +60,6 @@ class Baner extends React.Component {
   }
 
   render() {
-    // console.log(this.props.drizzle.contracts.TokenContract);
-
     const { logo } = this.props;
     const item = tokens.map(token =>
        <NavDropdown.Item key={token.address} eventKey={token.address}>{token.name}</NavDropdown.Item>
@@ -83,4 +85,16 @@ class Baner extends React.Component {
   }
 }
 
-export default Baner;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3
+  }
+}
+
+
+export default drizzleConnect(
+    withRouter(Baner),
+    mapStateToProps,
+);

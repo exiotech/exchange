@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Nav } from 'react-bootstrap';
 
 class Tab extends React.Component {
@@ -33,4 +35,15 @@ class Tab extends React.Component {
   }
 }
 
-export default Tab;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3
+  }
+}
+
+export default drizzleConnect(
+    withRouter(Tab),
+    mapStateToProps,
+);

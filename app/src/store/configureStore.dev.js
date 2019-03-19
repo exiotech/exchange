@@ -13,7 +13,7 @@ const configureStore = preloadedState => {
     rootReducer,
     preloadedState,
     compose(
-      applyMiddleware(thunk, createLogger(), sagaMiddleware)
+      applyMiddleware(thunk, /*createLogger(),*/ sagaMiddleware)
     )
   )
 

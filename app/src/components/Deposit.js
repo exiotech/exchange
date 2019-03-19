@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
 
 class Deposit extends React.Component {
@@ -24,12 +26,12 @@ class Deposit extends React.Component {
   }
 
   setValue = value => {
-    const { drizzle, drizzleState } = this.props;
+    const { drizzle, accounts } = this.props;
     const contract = drizzle.contracts.ExioExChange;
 
     // let drizzle know we want to call the `set` method with `value`
     const stackId = contract.methods["deposit"].cacheSend({
-      from: drizzleState.accounts[0],
+      from: accounts[0],
       value: value * 1000000000000000000
     });
 
@@ -39,7 +41,7 @@ class Deposit extends React.Component {
 
   getTxStatus = () => {
     // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props.drizzleState;
+    const { transactions, transactionStack } = this.props;
 
     // get the transaction hash using our saved `stackId`
     const txHash = transactionStack[this.state.stackId];
@@ -69,5 +71,17 @@ class Deposit extends React.Component {
     );
   }
 }
-
-export default Deposit;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3,
+    contracts: state.contracts,
+    transactions: state.transactions,
+    transactionStack: state.transactionStack,
+  }
+}
+export default drizzleConnect(
+    withRouter(Deposit),
+    mapStateToProps,
+);
