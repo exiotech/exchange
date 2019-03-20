@@ -16,7 +16,7 @@ class DepositToken extends React.Component {
     accounts: PropTypes.object,
     contracts: PropTypes.object,
     transactions: PropTypes.object,
-    transactionStack: PropTypes.object,
+    transactionStack: PropTypes.array,
   }
 
   constructor(props) {

@@ -12,7 +12,7 @@ class WithdrawToken extends React.Component {
   static propTypes = {
     accounts: PropTypes.object,
     transactions: PropTypes.object,
-    transactionStack: PropTypes.object,
+    transactionStack: PropTypes.array,
   }
 
   constructor(props) {
