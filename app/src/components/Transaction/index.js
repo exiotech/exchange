@@ -15,17 +15,17 @@ class Transaction extends React.Component {
     let tab;
     switch(this.state.tab) {
       case 'funds':
-        tab = <Funds drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
+        tab = <Funds drizzle={this.props.drizzle} tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
         break;
       case 'orders':
-        tab = <Orders drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
+        tab = <Orders drizzle={this.props.drizzle} tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
         break;
       default: tab = <div>trades</div>
     }
 
     return (
       <div>
-        <Tab drizzle={this.props.drizzle} drizzleState={this.props.drizzleState} onSelectTab={this.handleTab}></Tab>
+        <Tab drizzle={this.props.drizzle} onSelectTab={this.handleTab}></Tab>
         {tab}
       </div>
     );

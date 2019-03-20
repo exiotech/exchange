@@ -42,7 +42,7 @@ class Baner extends React.Component {
 
     let abi;
 
-    if(address === '0xd9E151BacB093a74C9790DC999b8f90C3698903d')
+    if(address === '0xa588892f9B950E3F1d8231F16b84A18d02AF6854')
       abi = exioabi.abi;
     else
       abi = testabi.abi;

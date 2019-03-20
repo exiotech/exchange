@@ -79,11 +79,11 @@ class Content extends React.Component {
     let input1, input2;
 
     if(tab === 'deposit') {
-      input1 = <DepositToken drizzle={this.props.drizzle} address={tokenAddress} />;
-      input2 = <Deposit drizzle={this.props.drizzle} />;
+      input1 = <DepositToken drizzle={drizzle} address={tokenAddress} />;
+      input2 = <Deposit drizzle={drizzle} />;
     } else if(tab === 'withdraw') {
-      input1 = <WithdrawToken drizzle={this.props.drizzle} address={tokenAddress} />;
-      input2 = <Withdraw drizzle={this.props.drizzle} />;
+      input1 = <WithdrawToken drizzle={drizzle} address={tokenAddress} />;
+      input2 = <Withdraw drizzle={drizzle} />;
     } else {
       console.log(tab);
     }
@@ -101,7 +101,7 @@ class Content extends React.Component {
           <tr>
             <td>{this.findTokenName(tokenAddress)}</td>
             <td>{this.state.tokenBalance}</td>
-            <td><Balance drizzle={drizzle} address={tokenAddress} /></td>
+            <td><Balance drizzle={drizzle} tokenAddress={tokenAddress} /></td>
           </tr>
           <tr>
             <td colSpan="3">{input1}</td>
@@ -109,7 +109,7 @@ class Content extends React.Component {
           <tr>
             <td>ETH</td>
             <td>{this.state.balance}</td>
-            <td><Balance drizzle={drizzle} address='0x0' /></td>
+            <td><Balance drizzle={drizzle} tokenAddress='0x0' /></td>
           </tr>
           <tr>
             <td colSpan="3">{input2}</td>

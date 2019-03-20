@@ -11,10 +11,10 @@ class Balance extends React.Component {
   }
 
   componentDidMount() {
-    const { drizzle, address, accounts } = this.props;
-    const contract = drizzle.contracts.ExioExChange;
+    const { drizzle, tokenAddress, accounts } = this.props;
+    const { ExioExChange } = drizzle.contracts;
 
-    const dataKey = contract.methods["balanceOf"].cacheCall(address, accounts[0]);
+    const dataKey = ExioExChange.methods["balanceOf"].cacheCall(tokenAddress, accounts[0]);
     // let drizzle know we want to watch the `myString` method
 
     // save the `dataKey` to local component state for later reference
@@ -22,13 +22,13 @@ class Balance extends React.Component {
   }
 
   componentDidUpdate(oldProps) {
-    const { drizzle, address, accounts } = this.props;
-    if (address === oldProps.address) {
+    const { drizzle, tokenAddress, accounts } = this.props;
+    if (tokenAddress === oldProps.tokenAddress) {
       return;
     }
-    const contract = drizzle.contracts.ExioExChange;
+    const { ExioExChange } = drizzle.contracts;
 
-    const dataKey = contract.methods["balanceOf"].cacheCall(address, accounts[0]);
+    const dataKey = ExioExChange.methods["balanceOf"].cacheCall(tokenAddress, accounts[0]);
     // let drizzle know we want to watch the `myString` method
 
     // save the `dataKey` to local component state for later reference
@@ -39,11 +39,11 @@ class Balance extends React.Component {
     // get the contract state from drizzleState
     const { ExioExChange } = this.props.contracts;
     const { web3 } = this.props.drizzle;
-    const { address } = this.props;
+    const { tokenAddress } = this.props;
 
     // using the saved `dataKey`, get the variable we're interested in
     let balance = ExioExChange.balanceOf[this.state.dataKey];
-    if(address === '0x0') {
+    if(tokenAddress === '0x0') {
       balance = balance && parseInt(web3.utils.fromWei(balance.value)).toFixed(2);
     }
     else

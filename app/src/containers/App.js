@@ -53,14 +53,14 @@ class App extends Component {
         <section>
           <Balances drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress}/>
         </section>
-        {/*<br />
+        <br />
         <section>
-          <Orders drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress} />
+          <Orders drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress} />
         </section>
         <br />
         <section>
-          <Transaction drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} tokenAddress={this.state.tokenAddress}/>
-        </section>*/}
+          <Transaction drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress}/>
+        </section>
         <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossOrigin="true" />

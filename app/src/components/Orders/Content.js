@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Form, Button, InputGroup } from 'react-bootstrap';
 
 import { tokens } from '../../data.json';
@@ -55,16 +57,16 @@ class Content extends React.Component {
   }
 
   buyOrder = async order => {
-    const { drizzle, drizzleState, tokenAddress } = this.props;
+    const { drizzle, tokenAddress, accounts } = this.props;
     const { ExioExChange } = drizzle.contracts;
     const { web3 } = this.props.drizzle;
 
     try {
-      const trxCount = await web3.eth.getTransactionCount(drizzleState.accounts[0]) + 1;
+      const trxCount = await web3.eth.getTransactionCount(accounts[0]) + 1;
       order.price = await web3.utils.toWei((order.price * order.amount).toString());
       // let drizzle know we want to call the `set` method with `value`
       const orderId = ExioExChange.methods["order"].cacheSend(tokenAddress, order.amount.toString(), '0x0', order.price * order.amount, order.expires, trxCount.toString(), {
-        from: drizzleState.accounts[0]
+        from: accounts[0]
       });
 
       // save the `stackId` for later reference
@@ -75,16 +77,16 @@ class Content extends React.Component {
   };
 
   sellOrder = async order => {
-    const { drizzle, drizzleState, tokenAddress } = this.props;
+    const { drizzle, tokenAddress, accounts } = this.props;
     const { ExioExChange } = drizzle.contracts;
     const { web3 } = this.props.drizzle;
 
     try {
-      const trxCount = await web3.eth.getTransactionCount(drizzleState.accounts[0]) + 1;
+      const trxCount = await web3.eth.getTransactionCount(accounts[0]) + 1;
       order.price = await web3.utils.toWei((order.price * order.amount).toString());
       // let drizzle know we want to call the `set` method with `value`
       const orderId = ExioExChange.methods["order"].cacheSend('0x0', order.price * order.amount, tokenAddress, order.amount.toString(), order.expires, trxCount.toString(), {
-        from: drizzleState.accounts[0]
+        from: accounts[0]
       });
 
       // save the `stackId` for later reference
@@ -96,7 +98,7 @@ class Content extends React.Component {
 
   getTxStatus = () => {
     // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props.drizzleState;
+    const { transactions, transactionStack } = this.props;
 
     // get the transaction hash using our saved `stackId`
     const txHash = transactionStack[this.state.stackId];
@@ -178,4 +180,17 @@ class Content extends React.Component {
   }
 }
 
-export default Content;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3,
+    contracts: state.contracts,
+    transactions: state.transactions,
+    transactionStack: state.transactionStack,
+  }
+}
+export default drizzleConnect(
+    withRouter(Content),
+    mapStateToProps,
+);

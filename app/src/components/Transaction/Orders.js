@@ -1,4 +1,6 @@
 import React from "react";
+import { drizzleConnect } from 'drizzle-react'
+import { withRouter } from 'react-router-dom'
 import { Table } from 'react-bootstrap';
 
 import { tokens } from '../../data.json';
@@ -13,14 +15,14 @@ class Orders extends React.Component {
   }
 
   componentDidMount() {
-    // this.setState({ events: this.props.drizzleState.contracts.ExioExChange.events });
+    // this.setState({ events: this.props.contracts.ExioExChange.events });
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.drizzleState.contracts.ExioExChange.events === prevProps.drizzleState.contracts.ExioExChange.events)
+    if(this.props.contracts.ExioExChange.events === prevProps.contracts.ExioExChange.events)
       return;
 
-    const event = this.props.drizzleState.contracts.ExioExChange.events[this.props.drizzleState.contracts.ExioExChange.events.length - 1];
+    const event = this.props.contracts.ExioExChange.events[this.props.contracts.ExioExChange.events.length - 1];
     console.log(event);
     const type = event.event;
 
@@ -90,4 +92,17 @@ class Orders extends React.Component {
   }
 }
 
-export default Orders;
+const mapStateToProps = state => {
+  return {
+    accounts: state.accounts,
+    drizzleStatus: state.drizzleStatus,
+    web3: state.web3,
+    contracts: state.contracts,
+    transactions: state.transactions,
+    transactionStack: state.transactionStack,
+  }
+}
+export default drizzleConnect(
+    withRouter(Orders),
+    mapStateToProps,
+);
