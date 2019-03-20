@@ -1,5 +1,5 @@
 import React from "react";
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
@@ -9,6 +9,10 @@ import testabi from '../../TestToken.json';
 import { tokens } from './../../data.json';
 
 class Baner extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object
+  }
+
   constructor(props, context) {
     super(props);
 
@@ -24,7 +28,7 @@ class Baner extends React.Component {
     this.addTokenContract(this.state.activeKey);
   }
 
-  handleSelect(eventKey) {
+  handleSelect = (eventKey) => {
     this.setState({ activeKey: eventKey });
     this.props.onSelectToken(eventKey);
     this.deleteTokenContract('TokenContract');
@@ -38,8 +42,6 @@ class Baner extends React.Component {
   }
 
   addTokenContract = (address) => {
-    const { drizzle } = this.props
-
     let abi;
 
     if(address === '0xa588892f9B950E3F1d8231F16b84A18d02AF6854')
@@ -49,14 +51,14 @@ class Baner extends React.Component {
 
     const contractConfig = {
       contractName: 'TokenContract',
-      web3Contract: new drizzle.web3.eth.Contract(abi, address)
+      web3Contract: new this.context.drizzle.web3.eth.Contract(abi, address)
     }
     const events = ['Transfer', 'Approval'];
-    drizzle.addContract(contractConfig, events);
+    this.context.drizzle.addContract(contractConfig, events);
   }
 
   deleteTokenContract = (name) => {
-    this.props.drizzle.deleteContract(name);
+    this.context.drizzle.deleteContract(name);
   }
 
   render() {
@@ -85,16 +87,6 @@ class Baner extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    accounts: state.accounts,
-    drizzleStatus: state.drizzleStatus,
-    web3: state.web3
-  }
-}
-
-
 export default drizzleConnect(
     withRouter(Baner),
-    mapStateToProps,
 );

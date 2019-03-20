@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Table } from 'react-bootstrap';
@@ -6,6 +7,14 @@ import { Table } from 'react-bootstrap';
 import { tokens } from '../../data.json';
 
 class Orders extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object,
+  }
+
+  static propTypes = {
+    contracts: PropTypes.object,
+  }
+
   state = { events: [], transactionHash: null, type: null, amount: '', tokenAmount: '' };
 
   findTokenName = (address) => {
@@ -23,7 +32,6 @@ class Orders extends React.Component {
       return;
 
     const event = this.props.contracts.ExioExChange.events[this.props.contracts.ExioExChange.events.length - 1];
-    console.log(event);
     const type = event.event;
 
     if(type !== 'Order')
@@ -94,12 +102,7 @@ class Orders extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    accounts: state.accounts,
-    drizzleStatus: state.drizzleStatus,
-    web3: state.web3,
     contracts: state.contracts,
-    transactions: state.transactions,
-    transactionStack: state.transactionStack,
   }
 }
 export default drizzleConnect(

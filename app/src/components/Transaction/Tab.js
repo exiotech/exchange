@@ -11,7 +11,7 @@ class Tab extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
   }
 
-  handleSelect(eventKey) {
+  handleSelect = (eventKey) => {
     this.setState({ activeKey: eventKey });
     this.props.onSelectTab(eventKey);
   }

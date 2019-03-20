@@ -12,7 +12,7 @@ import Orders from "../components/Orders";
 
 class App extends Component {
   static contextTypes = {
-    drizzle: PropTypes.object
+    drizzle: PropTypes.object,
   }
 
   constructor(props, context) {
@@ -48,10 +48,10 @@ class App extends Component {
     if(!this.state.isLoading) return 'Loading...'
     return (
       <div className="App">
-        <Baner drizzle={this.context.drizzle} logo={logo} onSelectToken={this.handleTokenAddress} />
+        <Baner logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>
-          <Balances drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress}/>
+          <Balances tokenAddress={this.state.tokenAddress}/>
         </section>
         <br />
         <section>
@@ -69,13 +69,6 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    accounts: state.accounts,
-  }
-}
-
 export default drizzleConnect(
     withRouter(App),
-    mapStateToProps,
 );

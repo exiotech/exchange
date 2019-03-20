@@ -1,9 +1,20 @@
 import React from "react";
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
 
 class Deposit extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object,
+  }
+
+  static propTypes = {
+    accounts: PropTypes.object,
+    transactions: PropTypes.object,
+    transactionStack: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,42 +26,33 @@ class Deposit extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({value: event.target.value});
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     const value = parseInt(this.state.value);
     event.preventDefault();
     this.setValue(value);
   }
 
   setValue = value => {
-    const { drizzle, accounts } = this.props;
-    const contract = drizzle.contracts.ExioExChange;
-
-    // let drizzle know we want to call the `set` method with `value`
-    const stackId = contract.methods["deposit"].cacheSend({
-      from: accounts[0],
+    const { ExioExChange } = this.context.drizzle.contracts;
+    const stackId = ExioExChange.methods["deposit"].cacheSend({
+      from: this.props.accounts[0],
       value: value * 1000000000000000000
     });
 
-    // save the `stackId` for later reference
     this.setState({ stackId });
   };
 
   getTxStatus = () => {
-    // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props;
+    const txHash = this.props.transactionStack[this.state.stackId];
 
-    // get the transaction hash using our saved `stackId`
-    const txHash = transactionStack[this.state.stackId];
-    // if transaction hash does not exist, don't display anything
     if (!txHash) return null;
-    if (!transactions[txHash]) return null;
+    if (!this.props.transactions[txHash]) return null;
 
-    // otherwise, return the transaction status
-    return transactions[txHash].status;
+    return this.props.transactions[txHash].status;
   };
 
   render() {
@@ -74,9 +76,6 @@ class Deposit extends React.Component {
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
-    drizzleStatus: state.drizzleStatus,
-    web3: state.web3,
-    contracts: state.contracts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
   }

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Form, Button, InputGroup } from 'react-bootstrap';
@@ -6,6 +7,15 @@ import { Form, Button, InputGroup } from 'react-bootstrap';
 import { tokens } from '../../data.json';
 
 class Content extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object,
+  }
+
+  static propTypes = {
+    accounts: PropTypes.object,
+    contracts: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -41,7 +51,6 @@ class Content extends React.Component {
   }
 
   handleSubmit = event => {
-    // const value = parseInt(this.state.value);
     event.preventDefault();
     const order = {
       amount:  parseFloat(this.state.amount),
@@ -57,19 +66,15 @@ class Content extends React.Component {
   }
 
   buyOrder = async order => {
-    const { drizzle, tokenAddress, accounts } = this.props;
-    const { ExioExChange } = drizzle.contracts;
-    const { web3 } = this.props.drizzle;
+    const { ExioExChange } = this.context.drizzle.contracts;
 
     try {
-      const trxCount = await web3.eth.getTransactionCount(accounts[0]) + 1;
-      order.price = await web3.utils.toWei((order.price * order.amount).toString());
-      // let drizzle know we want to call the `set` method with `value`
-      const orderId = ExioExChange.methods["order"].cacheSend(tokenAddress, order.amount.toString(), '0x0', order.price * order.amount, order.expires, trxCount.toString(), {
-        from: accounts[0]
+      const trxCount = await this.context.drizzle.web3.eth.getTransactionCount(this.props.accounts[0]) + 1;
+      order.price = await this.context.drizzle.web3.utils.toWei((order.price * order.amount).toString());
+      const orderId = ExioExChange.methods["order"].cacheSend(this.props.tokenAddress, order.amount.toString(), '0x0', order.price * order.amount, order.expires, trxCount.toString(), {
+        from: this.props.accounts[0]
       });
 
-      // save the `stackId` for later reference
       this.setState({ orderId });
     } catch(err) {
       console.log(err);
@@ -77,19 +82,15 @@ class Content extends React.Component {
   };
 
   sellOrder = async order => {
-    const { drizzle, tokenAddress, accounts } = this.props;
-    const { ExioExChange } = drizzle.contracts;
-    const { web3 } = this.props.drizzle;
+    const { ExioExChange } = this.context.drizzle.contracts;
 
     try {
-      const trxCount = await web3.eth.getTransactionCount(accounts[0]) + 1;
-      order.price = await web3.utils.toWei((order.price * order.amount).toString());
-      // let drizzle know we want to call the `set` method with `value`
-      const orderId = ExioExChange.methods["order"].cacheSend('0x0', order.price * order.amount, tokenAddress, order.amount.toString(), order.expires, trxCount.toString(), {
-        from: accounts[0]
+      const trxCount = await this.context.drizzle.web3.eth.getTransactionCount(this.props.accounts[0]) + 1;
+      order.price = await this.context.drizzle.web3.utils.toWei((order.price * order.amount).toString());
+      const orderId = ExioExChange.methods["order"].cacheSend('0x0', order.price * order.amount, this.props.tokenAddress, order.amount.toString(), order.expires, trxCount.toString(), {
+        from: this.props.accounts[0]
       });
 
-      // save the `stackId` for later reference
       this.setState({ orderId });
     } catch(err) {
       console.log(err);
@@ -97,17 +98,12 @@ class Content extends React.Component {
   };
 
   getTxStatus = () => {
-    // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props;
+    const txHash = this.props.transactionStack[this.state.stackId];
 
-    // get the transaction hash using our saved `stackId`
-    const txHash = transactionStack[this.state.stackId];
-    // if transaction hash does not exist, don't display anything
     if (!txHash) return null;
-    if (!transactions[txHash]) return null;
+    if (!this.props.transactions[txHash]) return null;
 
-    // otherwise, return the transaction status
-    return transactions[txHash].status;
+    return this.props.transactions[txHash].status;
   };
 
   componentDidMount() {
@@ -183,9 +179,6 @@ class Content extends React.Component {
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
-    drizzleStatus: state.drizzleStatus,
-    web3: state.web3,
-    contracts: state.contracts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
   }

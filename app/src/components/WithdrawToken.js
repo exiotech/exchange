@@ -1,9 +1,20 @@
 import React from "react";
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
 
 class WithdrawToken extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object,
+  }
+
+  static propTypes = {
+    accounts: PropTypes.object,
+    transactions: PropTypes.object,
+    transactionStack: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,42 +26,33 @@ class WithdrawToken extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({value: event.target.value});
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     const value = this.state.value;
     event.preventDefault();
     this.setValue(value);
   }
 
   setValue = value => {
-    const { drizzle, address, accounts } = this.props;
-    const contract = drizzle.contracts.ExioExChange;
+    const { ExioExChange } = this.context.drizzle.contracts;
 
-    // let drizzle know we want to call the `set` method with `value`
-    const stackId = contract.methods["withdrawToken"].cacheSend(address, value, {
-      from: accounts[0]
+    const stackId = ExioExChange.methods["withdrawToken"].cacheSend(this.props.address, value, {
+      from: this.props.accounts[0]
     });
 
-    // save the `stackId` for later reference
     this.setState({ stackId });
   };
 
   getTxStatus = () => {
-    // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props;
+    const txHash = this.props.transactionStack[this.state.stackId];
 
-    // get the transaction hash using our saved `stackId`
-    const txHash = transactionStack[this.state.stackId];
-
-    // if transaction hash does not exist, don't display anything
     if (!txHash) return null;
-    if (!transactions[txHash]) return null;
+    if (!this.props.transactions[txHash]) return null;
 
-    // otherwise, return the transaction status
-    return transactions[txHash].status;
+    return this.props.transactions[txHash].status;
   };
 
   render() {
@@ -75,9 +77,6 @@ class WithdrawToken extends React.Component {
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
-    drizzleStatus: state.drizzleStatus,
-    web3: state.web3,
-    contracts: state.contracts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
   }

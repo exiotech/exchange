@@ -13,8 +13,8 @@ class Orders extends React.Component {
   render() {
     return (
       <div>
-        <Tab drizzle={this.props.drizzle} onSelectTab={this.handleTab}></Tab>
-        <Content drizzle={this.props.drizzle} tab={this.state.tab} tokenAddress={this.props.tokenAddress}/>
+        <Tab onSelectTab={this.handleTab}></Tab>
+        <Content tab={this.state.tab} tokenAddress={this.props.tokenAddress}/>
       </div>
     );
   }

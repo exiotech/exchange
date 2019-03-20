@@ -1,6 +1,7 @@
 import React from "react";
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 
 import { tokens } from '../../data.json';
@@ -11,7 +12,46 @@ import Withdraw from "../Withdraw";
 import WithdrawToken from "../WithdrawToken";
 
 class Content extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object,
+  }
+
+  static propTypes = {
+    accounts: PropTypes.object,
+    contracts: PropTypes.object,
+  }
+
   state = { dataKey: null, balance: 0, tokenBalanceKey: null, tokenBalance: null };
+
+  componentDidMount() {
+    this.getBalance(this.props.tokenAddress).then(bal => {
+      this.setState({balance: (bal / 1000000000000000000).toFixed(2)});
+    });
+
+    const intervalID = setInterval(async () => {
+      if(this.context.drizzle.contracts.TokenContract) {
+        const { TokenContract } = this.context.drizzle.contracts;
+        const balance = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
+
+        this.setState({ tokenBalanceKey: balance });
+        await this.getTokenBalance(balance);
+        clearInterval(intervalID);
+      }
+    }, 100);
+
+  }
+
+  componentDidUpdate(prevProps) {
+    if ((this.props.tokenAddress !== prevProps.tokenAddress)) {
+      const { TokenContract } = this.context.drizzle.contracts;
+
+      const balance = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
+
+      this.setState({ tokenBalanceKey: balance });
+      this.getTokenBalance(balance);
+    }
+    return;
+  }
 
   findTokenName = (address) => {
     return tokens.find(token => {
@@ -20,12 +60,7 @@ class Content extends React.Component {
   }
 
   getBalance = async (address) => {
-    const { web3 } = this.props.drizzle;
-    const { accounts } = this.props;
-
-    const balance = await web3.eth.getBalance(accounts[0]);
-
-    return balance;
+    return await this.context.drizzle.web3.eth.getBalance(this.props.accounts[0]);
   }
 
   getTokenBalance = async (key) => {
@@ -41,49 +76,16 @@ class Content extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.getBalance(this.props.tokenAddress).then(bal => {
-      this.setState({balance: (bal / 1000000000000000000).toFixed(2)});
-    });
-
-    const intervalID = setInterval(async () => {
-      if(this.props.drizzle.contracts.TokenContract) {
-        const contract = this.props.drizzle.contracts.TokenContract;
-        const balance = contract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
-
-        this.setState({ tokenBalanceKey: balance });
-        await this.getTokenBalance(balance);
-        clearInterval(intervalID);
-      }
-    }, 100);
-
-  }
-
-  componentDidUpdate(prevProps) {
-    const { drizzle, tokenAddress, accounts } = this.props;
-    if ((tokenAddress !== prevProps.tokenAddress)) {
-      const contract = drizzle.contracts.TokenContract;
-
-      const balance = contract.methods["balanceOf"].cacheCall(accounts[0]);
-      // let drizzle know we want to watch the `myString` method
-
-      // save the `dataKey` to local component state for later reference
-      this.setState({ tokenBalanceKey: balance });
-      this.getTokenBalance(balance);
-    }
-    return;
-  }
-
   render() {
-    const {drizzle, tokenAddress, tab } = this.props;
+    const {tokenAddress, tab } = this.props;
     let input1, input2;
 
     if(tab === 'deposit') {
-      input1 = <DepositToken drizzle={drizzle} address={tokenAddress} />;
-      input2 = <Deposit drizzle={drizzle} />;
+      input1 = <DepositToken address={tokenAddress} />;
+      input2 = <Deposit />;
     } else if(tab === 'withdraw') {
-      input1 = <WithdrawToken drizzle={drizzle} address={tokenAddress} />;
-      input2 = <Withdraw drizzle={drizzle} />;
+      input1 = <WithdrawToken address={tokenAddress} />;
+      input2 = <Withdraw />;
     } else {
       console.log(tab);
     }
@@ -101,7 +103,7 @@ class Content extends React.Component {
           <tr>
             <td>{this.findTokenName(tokenAddress)}</td>
             <td>{this.state.tokenBalance}</td>
-            <td><Balance drizzle={drizzle} tokenAddress={tokenAddress} /></td>
+            <td><Balance tokenAddress={tokenAddress} /></td>
           </tr>
           <tr>
             <td colSpan="3">{input1}</td>
@@ -109,7 +111,7 @@ class Content extends React.Component {
           <tr>
             <td>ETH</td>
             <td>{this.state.balance}</td>
-            <td><Balance drizzle={drizzle} tokenAddress='0x0' /></td>
+            <td><Balance tokenAddress='0x0' /></td>
           </tr>
           <tr>
             <td colSpan="3">{input2}</td>

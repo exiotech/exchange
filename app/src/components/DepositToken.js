@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
@@ -7,6 +8,17 @@ import exioabi from '../ExioToken.json';
 import testabi from '../TestToken.json';
 
 class DepositToken extends React.Component {
+  static contextTypes = {
+    drizzle: PropTypes.object,
+  }
+
+  static propTypes = {
+    accounts: PropTypes.object,
+    contracts: PropTypes.object,
+    transactions: PropTypes.object,
+    transactionStack: PropTypes.object,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -20,7 +32,6 @@ class DepositToken extends React.Component {
   }
 
   componentDidMount() {
-    const { drizzle } = this.props;
     let abi;
 
     if(this.props.address === '0xa588892f9B950E3F1d8231F16b84A18d02AF6854')
@@ -30,11 +41,11 @@ class DepositToken extends React.Component {
 
     const contractConfig = {
       contractName: 'TokenContract',
-      web3Contract: new drizzle.web3.eth.Contract(abi, this.props.address)
+      web3Contract: new this.context.drizzle.web3.eth.Contract(abi, this.props.address)
     }
     const events = ['Transfer', 'Approval']
 
-    this.props.drizzle.addContract(contractConfig, events)
+    this.context.drizzle.addContract(contractConfig, events)
   }
 
   handleChange = event => {
@@ -45,16 +56,14 @@ class DepositToken extends React.Component {
     const value = parseInt(this.state.value);
     event.preventDefault();
     this.getApproval(value);
-    // this.setValue(value);
   }
 
   getApproval = value => {
-    const { drizzle, accounts } = this.props;
-    const { ExioExChange } = drizzle.contracts;
-    const { TokenContract } = drizzle.contracts;
+    const { ExioExChange } = this.context.drizzle.contracts;
+    const { TokenContract } = this.context.drizzle.contracts;
 
     const approvalId = TokenContract.methods["approve"].cacheSend(ExioExChange.address, value, {
-      from: accounts[0]
+      from: this.props.accounts[0]
     });
 
     this.setState({ approvalId }, () => {
@@ -68,30 +77,21 @@ class DepositToken extends React.Component {
   }
 
   setValue = value => {
-    const { drizzle, address, accounts } = this.props;
-    const contract = drizzle.contracts.ExioExChange;
-
-    // let drizzle know we want to call the `set` method with `value`
-    const stackId = contract.methods["depositToken"].cacheSend(address, value, {
-      from: accounts[0]
+    const contract = this.context.drizzle.contracts.ExioExChange;
+    const stackId = contract.methods["depositToken"].cacheSend(this.props.address, value, {
+      from: this.props.accounts[0]
     });
 
-    // save the `stackId` for later reference
     this.setState({ stackId });
   };
 
   getTxStatus = (txId) => {
-    // get the transaction states from the drizzle state
-    const { transactions, transactionStack } = this.props;
+    const txHash = this.props.transactionStack[txId];
 
-    // get the transaction hash using our saved `stackId`
-    const txHash = transactionStack[txId];
-    // if transaction hash does not exist, don't display anything
     if (!txHash) return null;
-    if (!transactions[txHash]) return null;
+    if (!this.props.transactions[txHash]) return null;
 
-    // otherwise, return the transaction status
-    return transactions[txHash].status;
+    return this.props.transactions[txHash].status;
   };
 
   render() {
@@ -116,8 +116,6 @@ class DepositToken extends React.Component {
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
-    drizzleStatus: state.drizzleStatus,
-    web3: state.web3,
     contracts: state.contracts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
