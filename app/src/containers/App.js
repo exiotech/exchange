@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 
+import actions from '../actions';
 import logo from '../exio.png';
 import { tokens } from '../data.json';
 import Baner from "../components/menu/Baner";
@@ -22,6 +23,11 @@ class App extends Component {
       drizzleState: null,
       tokenAddress: tokens[0].address
     };
+
+    console.log('ACTIONS', actions)
+    console.log('THIS.PROPS1', this.props)
+    this.props.setTokenAddress(tokens[0].address);
+    console.log('THIS.PROPS2', this.props)
   }
 
   componentDidMount() {
@@ -41,7 +47,9 @@ class App extends Component {
   }
 
   handleTokenAddress = (address) => {
-      this.setState({tokenAddress: address});
+    this.props.setTokenAddress(address);
+    console.log('THIS.PROPS', this.props)
+    this.setState({tokenAddress: address});
   }
 
   render() {
@@ -69,6 +77,20 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+    return {
+      tokenAddress: state.TokenReducer.tokenAddress,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
+    };
+};
+
 export default drizzleConnect(
     withRouter(App),
+    mapStateToProps,
+    mapDispatchToProps,
 );
