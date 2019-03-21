@@ -49,7 +49,6 @@ class App extends Component {
   }
 
   render() {
-    if(!this.state.isLoading) return 'Loading...'
     return (
       <div className="App">
         <Baner logo={logo} onSelectToken={this.handleTokenAddress} />
