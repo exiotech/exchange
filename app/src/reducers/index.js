@@ -5,7 +5,7 @@ import { TokenReducer } from './TokenReducer';
 
 const rootReducer = combineReducers({
   ...drizzleReducers,
-  TokenReducer,
+  currentToken: TokenReducer,
 })
 
 export default rootReducer

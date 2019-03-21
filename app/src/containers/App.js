@@ -24,10 +24,7 @@ class App extends Component {
       tokenAddress: tokens[0].address
     };
 
-    console.log('ACTIONS', actions)
-    console.log('THIS.PROPS1', this.props)
     this.props.setTokenAddress(tokens[0].address);
-    console.log('THIS.PROPS2', this.props)
   }
 
   componentDidMount() {
@@ -48,7 +45,6 @@ class App extends Component {
 
   handleTokenAddress = (address) => {
     this.props.setTokenAddress(address);
-    console.log('THIS.PROPS', this.props)
     this.setState({tokenAddress: address});
   }
 
@@ -79,7 +75,7 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      tokenAddress: state.TokenReducer.tokenAddress,
+      tokenAddress: state.currentToken.tokenAddress,
     };
 };
 
