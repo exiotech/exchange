@@ -4,8 +4,6 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
-import exioabi from '../../ExioToken.json';
-import testabi from '../../TestToken.json';
 import { tokens } from './../../data.json';
 
 class Baner extends React.Component {
@@ -24,41 +22,16 @@ class Baner extends React.Component {
     this.handleSelect = this.handleSelect.bind(this);
   }
 
-  componentDidMount() {
-    this.addTokenContract(this.state.activeKey);
-  }
-
   handleSelect = (eventKey) => {
     this.setState({ activeKey: eventKey });
     this.props.onSelectToken(eventKey);
     this.deleteTokenContract('TokenContract');
-    this.addTokenContract(eventKey);
   }
 
   findTokenName = (address) => {
     return tokens.find(token => {
       return token.address === address;
     }).name
-  }
-
-  addTokenContract = (address) => {
-    let abi;
-
-    if(address === '0xa588892f9B950E3F1d8231F16b84A18d02AF6854')
-      abi = exioabi.abi;
-    else
-      abi = testabi.abi;
-
-    const contractConfig = {
-      contractName: 'TokenContract',
-      web3Contract: new this.context.drizzle.web3.eth.Contract(abi, address)
-    }
-    const events = ['Transfer', 'Approval'];
-    this.context.drizzle.addContract(contractConfig, events);
-  }
-
-  deleteTokenContract = (name) => {
-    this.context.drizzle.deleteContract(name);
   }
 
   render() {

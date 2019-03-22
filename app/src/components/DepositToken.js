@@ -4,9 +4,6 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Form, Button } from 'react-bootstrap';
 
-import exioabi from '../ExioToken.json';
-import testabi from '../TestToken.json';
-
 class DepositToken extends React.Component {
   static contextTypes = {
     drizzle: PropTypes.object,
@@ -29,23 +26,6 @@ class DepositToken extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    let abi;
-
-    if(this.props.address === '0xa588892f9B950E3F1d8231F16b84A18d02AF6854')
-      abi = exioabi.abi;
-    else
-      abi = testabi.abi;
-
-    const contractConfig = {
-      contractName: 'TokenContract',
-      web3Contract: new this.context.drizzle.web3.eth.Contract(abi, this.props.address)
-    }
-    const events = ['Transfer', 'Approval']
-
-    this.context.drizzle.addContract(contractConfig, events)
   }
 
   handleChange = event => {

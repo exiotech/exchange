@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom'
 import actions from '../actions';
 import logo from '../exio.png';
 import { tokens } from '../data.json';
+import TokenContainer from "./TokenContainer";
 import Baner from "../components/menu/Baner";
 import Balances from "../components/Balances";
 import Transaction from "../components/Transaction";
@@ -25,6 +26,7 @@ class App extends Component {
     };
 
     this.props.setTokenAddress(tokens[0].address);
+    this.props.getBalanceOfToken(10);
   }
 
   componentDidMount() {
@@ -51,6 +53,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <TokenContainer />
         <Baner logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>
@@ -73,19 +76,20 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => {
-    return {
-      tokenAddress: state.currentToken.tokenAddress,
-    };
+  return {
+    currentToken: state.currentToken
+  };
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
-    };
+  return {
+    setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
+    getBalanceOfToken: (balance) => dispatch(actions.getBalanceOfToken(balance)),
+  };
 };
 
 export default drizzleConnect(
-    withRouter(App),
-    mapStateToProps,
-    mapDispatchToProps,
+  withRouter(App),
+  mapStateToProps,
+  mapDispatchToProps,
 );
