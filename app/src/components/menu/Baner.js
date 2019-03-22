@@ -25,7 +25,6 @@ class Baner extends React.Component {
   handleSelect = (eventKey) => {
     this.setState({ activeKey: eventKey });
     this.props.onSelectToken(eventKey);
-    this.deleteTokenContract('TokenContract');
   }
 
   render() {

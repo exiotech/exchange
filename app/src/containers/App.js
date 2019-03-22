@@ -26,7 +26,6 @@ class App extends Component {
     };
 
     this.props.setTokenAddress(tokens[0].address);
-    this.props.setBalanceOfToken(10);
   }
 
   componentDidMount() {
@@ -84,7 +83,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
-    setBalanceOfToken: (balance) => dispatch(actions.setBalanceOfToken(balance)),
   };
 };
 
