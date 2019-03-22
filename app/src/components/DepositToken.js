@@ -10,10 +10,11 @@ class DepositToken extends React.Component {
   }
 
   static propTypes = {
-    accounts: PropTypes.object,
-    contracts: PropTypes.object,
-    transactions: PropTypes.object,
-    transactionStack: PropTypes.array,
+    accounts: PropTypes.object.isRequired,
+    contracts: PropTypes.object.isRequired,
+    transactions: PropTypes.object.isRequired,
+    transactionStack: PropTypes.array.isRequired,
+    currentToken: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -58,7 +59,7 @@ class DepositToken extends React.Component {
 
   setValue = value => {
     const contract = this.context.drizzle.contracts.ExioExChange;
-    const stackId = contract.methods["depositToken"].cacheSend(this.props.address, value, {
+    const stackId = contract.methods["depositToken"].cacheSend(this.props.currentToken.address, value, {
       from: this.props.accounts[0]
     });
 
@@ -99,6 +100,7 @@ const mapStateToProps = state => {
     contracts: state.contracts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
+    currentToken: state.currentToken,
   }
 }
 export default drizzleConnect(

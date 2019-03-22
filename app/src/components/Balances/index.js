@@ -14,7 +14,7 @@ class Balances extends React.Component {
     return (
       <div>
         <Tab onSelectTab={this.handleTab}></Tab>
-        <Content tab={this.state.tab} tokenAddress={this.props.tokenAddress}/>
+        <Content tab={this.state.tab} />
       </div>
     );
   }

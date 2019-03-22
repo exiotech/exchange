@@ -4,24 +4,17 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Table } from 'react-bootstrap';
 
-import { tokens } from '../../data.json';
-
 class Orders extends React.Component {
   static contextTypes = {
     drizzle: PropTypes.object,
   }
 
   static propTypes = {
-    contracts: PropTypes.object,
+    contracts: PropTypes.object.isRequired,
+    currentToken: PropTypes.object.isRequired,
   }
 
   state = { events: [], transactionHash: null, type: null, amount: '', tokenAmount: '' };
-
-  findTokenName = (address) => {
-    return tokens.find(token => {
-      return token.address === address;
-    }).name
-  }
 
   componentDidMount() {
     // this.setState({ events: this.props.contracts.ExioExChange.events });
@@ -63,9 +56,7 @@ class Orders extends React.Component {
   }
 
   render() {
-    const {tokenAddress} = this.props;
     let row;
-    console.log(this.state.events);
     // if(this.state.events)
     //   row = this.state.events.map((event, index) => {
     //     if(index > 0 && this.state.events[index - 1].transactionHash === event.transactionHash) {
@@ -86,7 +77,7 @@ class Orders extends React.Component {
       <Table responsive hover>
         <thead>
           <tr>
-            <th>{this.findTokenName(tokenAddress)}/ETH</th>
+            <th>{this.props.currentToken.name}/ETH</th>
             <th>Available volume</th>
             <th>Expires in</th>
             <th>Cancel</th>
@@ -103,6 +94,7 @@ class Orders extends React.Component {
 const mapStateToProps = state => {
   return {
     contracts: state.contracts,
+    currentToken: state.currentToken,
   }
 }
 export default drizzleConnect(

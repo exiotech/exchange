@@ -56,15 +56,15 @@ class App extends Component {
         <Baner logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>
-          <Balances tokenAddress={this.state.tokenAddress}/>
+          <Balances />
         </section>
         <br />
         <section>
-          <Orders drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress} />
+          <Orders />
         </section>
         <br />
         <section>
-          <Transaction drizzle={this.context.drizzle} tokenAddress={this.state.tokenAddress}/>
+          <Transaction />
         </section>
         <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />

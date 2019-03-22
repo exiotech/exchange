@@ -4,16 +4,14 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Form, Button, InputGroup } from 'react-bootstrap';
 
-import { tokens } from '../../data.json';
-
 class Content extends React.Component {
   static contextTypes = {
     drizzle: PropTypes.object,
   }
 
   static propTypes = {
-    accounts: PropTypes.object,
-    contracts: PropTypes.object,
+    accounts: PropTypes.object.isRequired,
+    contracts: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -27,12 +25,6 @@ class Content extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  findTokenName = (address) => {
-    return tokens.find(token => {
-      return token.address === address;
-    }).name
   }
 
   handleChange = event => {

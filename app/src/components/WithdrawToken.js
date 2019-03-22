@@ -10,9 +10,10 @@ class WithdrawToken extends React.Component {
   }
 
   static propTypes = {
-    accounts: PropTypes.object,
-    transactions: PropTypes.object,
-    transactionStack: PropTypes.array,
+    accounts: PropTypes.object.isRequired,
+    transactions: PropTypes.object.isRequired,
+    transactionStack: PropTypes.array.isRequired,
+    currentToken: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -39,7 +40,7 @@ class WithdrawToken extends React.Component {
   setValue = value => {
     const { ExioExChange } = this.context.drizzle.contracts;
 
-    const stackId = ExioExChange.methods["withdrawToken"].cacheSend(this.props.address, value, {
+    const stackId = ExioExChange.methods["withdrawToken"].cacheSend(this.props.currentToken.address, value, {
       from: this.props.accounts[0]
     });
 
@@ -79,6 +80,7 @@ const mapStateToProps = state => {
     accounts: state.accounts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
+    currentToken: state.currentToken,
   }
 }
 

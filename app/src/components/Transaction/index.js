@@ -15,10 +15,10 @@ class Transaction extends React.Component {
     let tab;
     switch(this.state.tab) {
       case 'funds':
-        tab = <Funds tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
+        tab = <Funds tab={this.state.tab} />
         break;
       case 'orders':
-        tab = <Orders tab={this.state.tab} tokenAddress={this.props.tokenAddress} />
+        tab = <Orders tab={this.state.tab} />
         break;
       default: tab = <div>trades</div>
     }

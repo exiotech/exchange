@@ -16,8 +16,9 @@ class Content extends React.Component {
   }
 
   static propTypes = {
-    accounts: PropTypes.object,
-    contracts: PropTypes.object,
+    accounts: PropTypes.object.isRequired,
+    contracts: PropTypes.object.isRequired,
+    currentToken: PropTypes.object.isRequired,
   }
 
   state = { dataKey: null, balance: 0, };
@@ -33,14 +34,14 @@ class Content extends React.Component {
   }
 
   render() {
-    const {tokenAddress, tab } = this.props;
+    const { tab } = this.props;
     let input1, input2;
 
     if(tab === 'deposit') {
-      input1 = <DepositToken address={tokenAddress} />;
+      input1 = <DepositToken />;
       input2 = <Deposit />;
     } else if(tab === 'withdraw') {
-      input1 = <WithdrawToken address={tokenAddress} />;
+      input1 = <WithdrawToken />;
       input2 = <Withdraw />;
     } else {
       console.log(tab);
@@ -59,7 +60,7 @@ class Content extends React.Component {
           <tr>
             <td>{this.props.currentToken.name}</td>
             <td>{this.props.currentToken.balance}</td>
-            <td><Balance tokenAddress={tokenAddress} /></td>
+            <td><Balance tokenAddress={this.props.currentToken.address} /></td>
           </tr>
           <tr>
             <td colSpan="3">{input1}</td>

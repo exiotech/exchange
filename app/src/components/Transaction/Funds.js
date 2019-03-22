@@ -4,24 +4,17 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Table } from 'react-bootstrap';
 
-import { tokens } from '../../data.json';
-
 class Funds extends React.Component {
   static contextTypes = {
     drizzle: PropTypes.object,
   }
 
   static propTypes = {
-    contracts: PropTypes.object,
+    contracts: PropTypes.object.isRequired,
+    currentToken: PropTypes.object.isRequired,
   }
 
   state = { events: [] };
-
-  findTokenName = (address) => {
-    return tokens.find(token => {
-      return token.address === address;
-    }).name
-  }
 
   componentDidMount() {
     // this.setState({ events: this.props.contracts.ExioExChange.events });
@@ -75,7 +68,7 @@ class Funds extends React.Component {
           <tr>
             <th>Transaction</th>
             <th>Type</th>
-            <th>{this.findTokenName(this.props.tokenAddress)}</th>
+            <th>{this.props.currentToken.name}</th>
             <th>ETH</th>
           </tr>
         </thead>
@@ -90,6 +83,7 @@ class Funds extends React.Component {
 const mapStateToProps = state => {
   return {
     contracts: state.contracts,
+    currentToken: state.currentToken,
   }
 }
 export default drizzleConnect(
