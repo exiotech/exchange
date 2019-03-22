@@ -20,7 +20,7 @@ export const TokenReducer = handleActions({
     };
   },
 
-  GET_BALANCE_OF_TOKEN: (state, { payload: { balance } }) => {
+  SET_BALANCE_OF_TOKEN: (state, { payload: { balance } }) => {
     return {
       ...state,
       balance,

@@ -14,13 +14,26 @@ class TokenContainer extends Component {
   constructor(props, context) {
     super(props)
     this.state = {
-
+      balanceOfKey: null,
     };
   }
 
   componentDidMount() {
     this.addTokenContract();
     this.props.setTokenName(this.findTokenName(this.props.currentToken.address));
+
+    const intervalID = setInterval(async () => {
+      if(this.context.drizzle.contracts.TokenContract) {
+        const { TokenContract } = this.context.drizzle.contracts;
+        const balanceOfKey = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
+
+        this.setState({ balanceOfKey });
+
+        await this.getTokenBalance(balanceOfKey);
+
+        clearInterval(intervalID);
+      }
+    }, 1);
   }
 
   componentDidUpdate(oldProps) {
@@ -30,6 +43,12 @@ class TokenContainer extends Component {
 
     this.deleteTokenContract();
     this.addTokenContract();
+
+    const { TokenContract } = this.context.drizzle.contracts;
+    const balanceOfKey = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
+
+    this.setState({ balanceOfKey });
+    this.getTokenBalance(balanceOfKey);
   }
 
   componentWillUnmount() {
@@ -63,10 +82,20 @@ class TokenContainer extends Component {
     this.context.drizzle.deleteContract('TokenContract');
   }
 
+  getTokenBalance = async (key) => {
+    if(this.props.contracts.TokenContract) {
+      const balanceInterval = setInterval(async () => {
+        let bal = this.props.contracts.TokenContract.balanceOf[key];
+
+        if(bal) {
+          this.props.setBalanceOfToken(parseInt(bal.value))
+          clearInterval(balanceInterval);
+        }
+      }, 100);
+    }
+  }
+
   render() {
-    console.log('ACTIONS', actions)
-    console.log('THIS.PROPS', this.props)
-    console.log('THIS.CONTEXT.DRIZZLE', this.context.drizzle)
     return (<span></span>);
   }
 }
@@ -82,6 +111,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
       setTokenName: (name) => dispatch(actions.setTokenName(name)),
+      setBalanceOfToken: (balance) => dispatch(actions.setBalanceOfToken(balance)),
     };
 };
 

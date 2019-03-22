@@ -14,7 +14,7 @@ const configureStore = preloadedState => {
     rootReducer,
     preloadedState,
     composeEnhancers(
-      applyMiddleware(thunk, /*createLogger(),*/ sagaMiddleware)
+      applyMiddleware(thunk, createLogger(), sagaMiddleware)
     )
   )
 

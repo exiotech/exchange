@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 
-import { tokens } from '../../data.json';
 import Balance from "../Balance";
 import Deposit from "../Deposit";
 import DepositToken from "../DepositToken";
@@ -21,59 +20,16 @@ class Content extends React.Component {
     contracts: PropTypes.object,
   }
 
-  state = { dataKey: null, balance: 0, tokenBalanceKey: null, tokenBalance: null };
+  state = { dataKey: null, balance: 0, };
 
   componentDidMount() {
     this.getBalance(this.props.tokenAddress).then(bal => {
       this.setState({balance: (bal / 1000000000000000000).toFixed(2)});
     });
-
-    const intervalID = setInterval(async () => {
-      if(this.context.drizzle.contracts.TokenContract) {
-        const { TokenContract } = this.context.drizzle.contracts;
-        const balance = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
-
-        this.setState({ tokenBalanceKey: balance });
-        await this.getTokenBalance(balance);
-        clearInterval(intervalID);
-      }
-    }, 100);
-
-  }
-
-  componentDidUpdate(prevProps) {
-    if ((this.props.tokenAddress !== prevProps.tokenAddress)) {
-      const { TokenContract } = this.context.drizzle.contracts;
-
-      const balance = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
-
-      this.setState({ tokenBalanceKey: balance });
-      this.getTokenBalance(balance);
-    }
-    return;
-  }
-
-  findTokenName = (address) => {
-    return tokens.find(token => {
-      return token.address === address;
-    }).name
   }
 
   getBalance = async (address) => {
     return await this.context.drizzle.web3.eth.getBalance(this.props.accounts[0]);
-  }
-
-  getTokenBalance = async (key) => {
-    if(this.props.contracts.TokenContract) {
-      const balanceInterval = setInterval(async () => {
-        let bal = this.props.contracts.TokenContract.balanceOf[key];
-
-        if(bal) {
-          this.setState({ tokenBalance: bal.value });
-          clearInterval(balanceInterval);
-        }
-      }, 100);
-    }
   }
 
   render() {
@@ -101,8 +57,8 @@ class Content extends React.Component {
         </thead>
         <tbody>
           <tr>
-            <td>{this.findTokenName(tokenAddress)}</td>
-            <td>{this.state.tokenBalance}</td>
+            <td>{this.props.currentToken.name}</td>
+            <td>{this.props.currentToken.balance}</td>
             <td><Balance tokenAddress={tokenAddress} /></td>
           </tr>
           <tr>
@@ -128,6 +84,7 @@ const mapStateToProps = state => {
     drizzleStatus: state.drizzleStatus,
     web3: state.web3,
     contracts: state.contracts,
+    currentToken: state.currentToken,
   }
 }
 
