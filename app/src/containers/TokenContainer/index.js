@@ -20,6 +20,7 @@ class TokenContainer extends Component {
 
   componentDidMount() {
     this.addTokenContract();
+    this.props.setTokenName(this.findTokenName(this.props.currentToken.address));
   }
 
   componentDidUpdate(oldProps) {
@@ -39,6 +40,12 @@ class TokenContainer extends Component {
     return tokens.find(token => {
       return token.address === address;
     }).abi;
+  }
+
+  findTokenName = (address) => {
+    return tokens.find(token => {
+      return token.address === address;
+    }).name
   }
 
   addTokenContract = () => {
@@ -74,7 +81,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-      getBalanceOfToken: (balance) => dispatch(actions.getBalanceOfToken(balance)),
+      setTokenName: (name) => dispatch(actions.setTokenName(name)),
     };
 };
 

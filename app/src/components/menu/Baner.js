@@ -28,18 +28,11 @@ class Baner extends React.Component {
     this.deleteTokenContract('TokenContract');
   }
 
-  findTokenName = (address) => {
-    return tokens.find(token => {
-      return token.address === address;
-    }).name
-  }
-
   render() {
     const { logo } = this.props;
     const item = tokens.map(token =>
        <NavDropdown.Item key={token.address} eventKey={token.address}>{token.name}</NavDropdown.Item>
     );
-    const title = this.findTokenName(this.state.activeKey);
 
     return (
       <Navbar collapseOnSelect expand="lg" bg="primary" variant="dark">
@@ -50,7 +43,7 @@ class Baner extends React.Component {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto" activeKey={this.state.activeKey} onSelect={k => this.handleSelect(k)}>
-            <NavDropdown title={title} id="nav-dropdown" >
+            <NavDropdown title={this.props.currentToken.name} id="nav-dropdown" >
               {item}
             </NavDropdown>
           </Nav>
@@ -60,6 +53,13 @@ class Baner extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => {
+    return {
+      currentToken: state.currentToken,
+    };
+};
+
 export default drizzleConnect(
     withRouter(Baner),
+    mapStateToProps,
 );
