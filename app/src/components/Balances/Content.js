@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Table } from 'react-bootstrap';
 
+import { precisionRound } from '../../utils';
 import Balance from "../Balance";
 import Deposit from "../Deposit";
 import DepositToken from "../DepositToken";
@@ -59,7 +60,7 @@ class Content extends React.Component {
         <tbody>
           <tr>
             <td>{this.props.currentToken.name}</td>
-            <td>{this.props.currentToken.balance}</td>
+            <td>{precisionRound(this.props.currentToken.balance, 2).toFixed(2)}</td>
             <td><Balance tokenAddress={this.props.currentToken.address} /></td>
           </tr>
           <tr>
