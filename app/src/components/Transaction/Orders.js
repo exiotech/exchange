@@ -12,12 +12,20 @@ class Orders extends React.Component {
   static propTypes = {
     contracts: PropTypes.object.isRequired,
     currentToken: PropTypes.object.isRequired,
+    exioExChange: PropTypes.object,
   }
 
   state = { events: [], transactionHash: null, type: null, amount: '', tokenAmount: '' };
 
   componentDidMount() {
-    // this.setState({ events: this.props.contracts.ExioExChange.events });
+    let events = this.props.exioExChange.events.filter((currentValue) => {
+      if(currentValue.event === 'Order')
+        return true;
+
+      return false;
+    })
+
+    this.setState({ events: events.map((event) => this.handleEvent(event)) });
   }
 
   componentDidUpdate(prevProps) {
@@ -25,23 +33,23 @@ class Orders extends React.Component {
       return;
 
     const event = this.props.contracts.ExioExChange.events[this.props.contracts.ExioExChange.events.length - 1];
-    const type = event.event;
 
-    if(type !== 'Order')
+    if(event.event !== 'Order')
       return;
 
-    const { transactionHash } = event;
-    const { tokenGet } = event.returnValues;
-    const { amountGet } = event.returnValues;
-    const { tokenGive } = event.returnValues;
-    const { amountGive } = event.returnValues;
-    const { expires } = event.returnValues;
-    const { nonce } = event.returnValues;
-    const { user } = event.returnValues;
+    const e = this.handleEvent(event);
 
-    const e = {
-      type,
-      transactionHash,
+    this.setState(prevState => ({
+      events: [...prevState.events, e]
+    }));
+  }
+
+  handleEvent = (event) => {
+    const { tokenGet, amountGet, tokenGive, amountGive, expires, nonce, user } = event.returnValues;
+
+    return {
+      type: event.event,
+      transactionHash: event.transactionHash,
       tokenGet,
       amountGet,
       tokenGive,
@@ -50,28 +58,20 @@ class Orders extends React.Component {
       nonce,
       user,
     }
-    this.setState(prevState => ({
-      events: [...prevState.events, e]
-    }));
   }
 
   render() {
     let row;
-    // if(this.state.events)
-    //   row = this.state.events.map((event, index) => {
-    //     if(index > 0 && this.state.events[index - 1].transactionHash === event.transactionHash) {
-    //       return (<tr key={index}></tr>);
-    //     }
-    //
-    //     return (
-    //       <tr key={index}>
-    //         <td>{event.transactionHash}</td>
-    //         <td>{event.type}</td>
-    //         <td>{event.tokenAmount}</td>
-    //         <td>{event.ethAmount}</td>
-    //       </tr>
-    //     );
-    //   });
+    row = this.state.events.map((event, index) => {
+      return (
+        <tr key={index}>
+          <td>{event.amountGet / event.amountGive}</td>
+          <td>{event.type}</td>
+          <td>{event.expires}</td>
+          <td>Button</td>
+        </tr>
+      );
+    });
 
     return (
       <Table responsive hover>
@@ -95,6 +95,7 @@ const mapStateToProps = state => {
   return {
     contracts: state.contracts,
     currentToken: state.currentToken,
+    exioExChange: state.exioExChange,
   }
 }
 export default drizzleConnect(

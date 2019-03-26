@@ -7,6 +7,7 @@ import actions from '../actions';
 import logo from '../exio.png';
 import { tokens } from '../data.json';
 import TokenContainer from "./TokenContainer";
+import ExioExChangeContainer from "./ExioExChangeContainer";
 import Baner from "../components/menu/Baner";
 import Balances from "../components/Balances";
 import Transaction from "../components/Transaction";
@@ -53,6 +54,7 @@ class App extends Component {
     return (
       <div className="App">
         <TokenContainer />
+        <ExioExChangeContainer />
         <Baner logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>

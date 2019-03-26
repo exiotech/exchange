@@ -12,35 +12,47 @@ class Funds extends React.Component {
   static propTypes = {
     contracts: PropTypes.object.isRequired,
     currentToken: PropTypes.object.isRequired,
+    exioExChange: PropTypes.object,
   }
 
   state = { events: [] };
 
   componentDidMount() {
-    // this.setState({ events: this.props.contracts.ExioExChange.events });
+    let events = this.props.exioExChange.events.filter((currentValue) => {
+      if(currentValue.event === 'Deposit' || currentValue.event === 'Withdraw')
+        return true;
+
+      return false;
+    })
+
+    this.setState({ events: events.map((event) => this.handleEvent(event)) });
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.contracts.ExioExChange.events === prevProps.contracts.ExioExChange.events)
+    if(this.props.exioExChange.events === prevProps.exioExChange.events)
       return;
 
-    const event = this.props.contracts.ExioExChange.events[this.props.contracts.ExioExChange.events.length - 1];
-    const type = event.event;
-    const { transactionHash } = event;
-    const { amount } = event.returnValues;
-    const tokenAmount = '0x0000000000000000000000000000000000000000' === event.returnValues.token ? '' : amount;
-    const ethAmount = '0x0000000000000000000000000000000000000000' === event.returnValues.token ? parseInt(this.context.drizzle.web3.utils.fromWei(amount)).toFixed(2) : '';
+    let event = this.props.exioExChange.events[this.props.exioExChange.events.length - 1];
 
-    const e = {
-      type,
-      transactionHash,
-      tokenAmount,
-      ethAmount
-    }
+    if(event !== 'Deposit' && event !== 'Withdraw')
+      return;
+
+    event = this.handleEvent(event)
 
     this.setState(prevState => ({
-      events: [...prevState.events, e]
+      events: [...prevState.events, event]
     }));
+  }
+
+  handleEvent = (event) => {
+    const nullAddress = '0x0000000000000000000000000000000000000000'
+
+    return {
+      type: event.event,
+      transactionHash: event.transactionHash,
+      tokenAmount: nullAddress === event.returnValues.token ? '' : event.returnValues.amount.toFixed(2),
+      ethAmount: nullAddress === event.returnValues.token ? parseInt(this.context.drizzle.web3.utils.fromWei( event.returnValues.amount)).toFixed(2) : '',
+    }
   }
 
   render() {
@@ -84,6 +96,7 @@ const mapStateToProps = state => {
   return {
     contracts: state.contracts,
     currentToken: state.currentToken,
+    exioExChange: state.exioExChange,
   }
 }
 export default drizzleConnect(

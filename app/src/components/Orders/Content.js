@@ -11,7 +11,6 @@ class Content extends React.Component {
 
   static propTypes = {
     accounts: PropTypes.object.isRequired,
-    contracts: PropTypes.object.isRequired,
   }
 
   constructor(props) {
