@@ -11,6 +11,7 @@ class Content extends React.Component {
 
   static propTypes = {
     accounts: PropTypes.object.isRequired,
+    currentToken: PropTypes.object.isRequired,
   }
 
   constructor(props) {
@@ -62,7 +63,7 @@ class Content extends React.Component {
     try {
       const trxCount = await this.context.drizzle.web3.eth.getTransactionCount(this.props.accounts[0]) + 1;
       order.price = await this.context.drizzle.web3.utils.toWei((order.price * order.amount).toString());
-      const orderId = ExioExChange.methods["order"].cacheSend(this.props.tokenAddress, order.amount.toString(), '0x0', order.price * order.amount, order.expires, trxCount.toString(), {
+      const orderId = ExioExChange.methods["order"].cacheSend(this.props.currentToken.address, order.amount.toString(), '0x0', order.price * order.amount, order.expires, trxCount.toString(), {
         from: this.props.accounts[0]
       });
 
@@ -78,7 +79,7 @@ class Content extends React.Component {
     try {
       const trxCount = await this.context.drizzle.web3.eth.getTransactionCount(this.props.accounts[0]) + 1;
       order.price = await this.context.drizzle.web3.utils.toWei((order.price * order.amount).toString());
-      const orderId = ExioExChange.methods["order"].cacheSend('0x0', order.price * order.amount, this.props.tokenAddress, order.amount.toString(), order.expires, trxCount.toString(), {
+      const orderId = ExioExChange.methods["order"].cacheSend('0x0', order.price * order.amount, this.props.currentToken.address, order.amount.toString(), order.expires, trxCount.toString(), {
         from: this.props.accounts[0]
       });
 
@@ -172,6 +173,7 @@ const mapStateToProps = state => {
     accounts: state.accounts,
     transactions: state.transactions,
     transactionStack: state.transactionStack,
+    currentToken: state.currentToken,
   }
 }
 export default drizzleConnect(

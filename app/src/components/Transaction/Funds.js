@@ -50,7 +50,7 @@ class Funds extends React.Component {
     return {
       type: event.event,
       transactionHash: event.transactionHash,
-      tokenAmount: nullAddress === event.returnValues.token ? '' : event.returnValues.amount.toFixed(2),
+      tokenAmount: nullAddress === event.returnValues.token ? '' : parseInt(event.returnValues.amount).toFixed(2),
       ethAmount: nullAddress === event.returnValues.token ? parseInt(this.context.drizzle.web3.utils.fromWei( event.returnValues.amount)).toFixed(2) : '',
     }
   }
