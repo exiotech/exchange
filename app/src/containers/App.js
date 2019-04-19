@@ -23,14 +23,13 @@ class App extends Component {
     this.state = {
       isLoading: false,
       drizzleState: null,
-      tokenAddress: tokens[0].address
     };
 
-    this.props.setTokenAddress(tokens[0].address);
+    this.props.setErc20TokenAddress(tokens[0].address);
   }
 
   componentWillMount() {
-    this.props.getErc20TokenAbi();
+    // this.props.setErc20TokenAddress('0xA63B377BA262c0C0708AbbE125b1b345a9391Cd7');
   }
 
   componentDidMount() {
@@ -83,13 +82,13 @@ class App extends Component {
 const mapStateToProps = (state) => {
   return {
     currentToken: state.currentToken,
-    erc20TokenABI: state.erc20TokenABI,
+    erc20Token: state.erc20Token,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getErc20TokenAbi: () => dispatch(actions.getErc20TokenAbi()),
+    setErc20TokenAddress: (address) => dispatch(actions.setErc20TokenAddress(address)),
     setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
   };
 };

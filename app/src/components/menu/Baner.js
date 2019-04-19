@@ -4,7 +4,7 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
-import { tokens } from './../../data.json';
+import { tokens } from './../../consts/data.json';
 
 class Baner extends React.Component {
   static contextTypes = {

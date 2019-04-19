@@ -24,7 +24,7 @@ function* getErc20TokenAbi() {
 }
 
 function* erc20TokenABISaga () {
-  yield takeEvery('GET_ERC20_TOKEN_ABI', getErc20TokenAbi);
+  yield takeEvery('SET_ERC20_TOKEN_ADDRESS', getErc20TokenAbi);
 }
 
 export default erc20TokenABISaga;
