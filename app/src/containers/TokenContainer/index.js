@@ -4,7 +4,7 @@ import { drizzleConnect } from 'drizzle-react'
 import { withRouter } from 'react-router-dom'
 
 import actions from '../../actions';
-import { tokens } from '../../data.json';
+import { tokens } from '../../consts/data.json';
 
 class TokenContainer extends Component {
   static contextTypes = {
@@ -19,36 +19,41 @@ class TokenContainer extends Component {
   }
 
   componentDidMount() {
-    this.addTokenContract();
-    this.props.setTokenName(this.findTokenName(this.props.currentToken.address));
-
-    const intervalID = setInterval(async () => {
-      if(this.context.drizzle.contracts.TokenContract) {
-        const { TokenContract } = this.context.drizzle.contracts;
-        const balanceOfKey = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
-
-        this.setState({ balanceOfKey });
-
-        await this.getTokenBalance(balanceOfKey);
-
-        clearInterval(intervalID);
-      }
-    }, 1);
+    // this.addTokenContract();
+    // this.props.setTokenName(this.findTokenName(this.props.currentToken.address));
+    // console.log('THIS.PROPS.CURRENTTOKEN.ADDRESS', this.props.currentToken.address)
+    //
+    // const intervalID = setInterval(async () => {
+    //   if(this.context.drizzle.contracts.TokenContract) {
+    //     const { TokenContract } = this.context.drizzle.contracts;
+    //     console.log('TOKENCONTRACT', TokenContract)
+    //     const balanceOfKey = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
+    //
+    //     this.setState({ balanceOfKey });
+    //
+    //     await this.getTokenBalance(balanceOfKey);
+    //
+    //     clearInterval(intervalID);
+    //   }
+    // }, 1);
   }
 
   componentDidUpdate(oldProps) {
-    if (this.props.currentToken.address === oldProps.currentToken.address) {
-      return;
-    }
-
-    this.deleteTokenContract();
-    this.addTokenContract();
-
-    const { TokenContract } = this.context.drizzle.contracts;
-    const balanceOfKey = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
-
-    this.setState({ balanceOfKey });
-    this.getTokenBalance(balanceOfKey);
+    // if (this.props.erc20TokenABI.beneficiaresAddresses === oldProps.erc20TokenABI.beneficiaresAddresses) {
+    //   return;
+    // }
+    // if (this.props.currentToken.address === oldProps.currentToken.address) {
+    //   return;
+    // }
+    //
+    // this.deleteTokenContract();
+    // this.addTokenContract();
+    //
+    // const { TokenContract } = this.context.drizzle.contracts;
+    // const balanceOfKey = TokenContract.methods["balanceOf"].cacheCall(this.props.accounts[0]);
+    //
+    // this.setState({ balanceOfKey });
+    // this.getTokenBalance(balanceOfKey);
   }
 
   componentWillUnmount() {
@@ -68,7 +73,9 @@ class TokenContainer extends Component {
   }
 
   addTokenContract = () => {
-    const abi = this.getABI(this.props.currentToken.address);
+    // const abi = this.getABI(this.props.currentToken.address);
+    const abi = this.props.erc20TokenABI.beneficiaresAddresses;
+    console.log('THIS.PROPS.ERC20TOKENABI.BENEFICIARESADDRESSES', this.props.erc20TokenABI.beneficiaresAddresses)
 
     const contractConfig = {
       contractName: 'TokenContract',
@@ -96,7 +103,7 @@ class TokenContainer extends Component {
   }
 
   render() {
-    return (<span></span>);
+    return (null);
   }
 }
 
@@ -105,6 +112,7 @@ const mapStateToProps = (state) => {
       currentToken: state.currentToken,
       accounts: state.accounts,
       contracts: state.contracts,
+      erc20TokenABI: state.erc20TokenABI,
     };
 };
 

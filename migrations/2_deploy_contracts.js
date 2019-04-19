@@ -1,7 +1,9 @@
+const consts = require('../consts');
+
 const AccountLevel = artifacts.require("AccountLevel");
 const ExioExChange = artifacts.require("ExioExChange");
 
-module.exports = async function(deployer) {
+module.exports = async function(deployer, network, [owner]) {
   await deployer.deploy(AccountLevel);
-  await deployer.deploy(ExioExChange, '0x689cDd53AFB3A786A4821dED5669f1c9E8ffAEB7', '0x88d90A6a83A5829c48EF002330E99141f12F0394', AccountLevel.address, 1, 1, 1);
+  await deployer.deploy(ExioExChange, consts.OWNER, consts.FEE_ACCOUNT, AccountLevel.address, consts.FEE_MAKE, consts.FEE_TAKE, consts.FEE_REBATE);
 };

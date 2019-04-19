@@ -1,17 +1,17 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { drizzleConnect } from 'drizzle-react'
-import { withRouter } from 'react-router-dom'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { drizzleConnect } from 'drizzle-react';
+import { withRouter } from 'react-router-dom';
 
 import actions from '../actions';
-import logo from '../exio.png';
-import { tokens } from '../data.json';
+// import logo from '../exio.png';
+import { tokens } from '../consts/data.json';
 import TokenContainer from "./TokenContainer";
-import ExioExChangeContainer from "./ExioExChangeContainer";
-import Baner from "../components/menu/Baner";
-import Balances from "../components/Balances";
-import Transaction from "../components/Transaction";
-import Orders from "../components/Orders";
+// import ExioExChangeContainer from "./ExioExChangeContainer";
+// import Baner from "../components/menu/Baner";
+// import Balances from "../components/Balances";
+// import Transaction from "../components/Transaction";
+// import Orders from "../components/Orders";
 
 class App extends Component {
   static contextTypes = {
@@ -26,6 +26,7 @@ class App extends Component {
       tokenAddress: tokens[0].address
     };
 
+    this.props.getBeneficiaresAddresses();
     this.props.setTokenAddress(tokens[0].address);
   }
 
@@ -54,7 +55,7 @@ class App extends Component {
     return (
       <div className="App">
         <TokenContainer />
-        <ExioExChangeContainer />
+        {/*<ExioExChangeContainer />
         <Baner logo={logo} onSelectToken={this.handleTokenAddress} />
         <br />
         <section>
@@ -67,7 +68,7 @@ class App extends Component {
         <br />
         <section>
           <Transaction />
-        </section>
+        </section>*/}
         <script src="https://unpkg.com/react/umd/react.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-dom/umd/react-dom.production.js" crossOrigin="true" />
         <script src="https://unpkg.com/react-bootstrap@next/dist/react-bootstrap.min.js" crossOrigin="true" />
@@ -78,13 +79,15 @@ class App extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    currentToken: state.currentToken
+    currentToken: state.currentToken,
+    erc20TokenABI: state.erc20TokenABI,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
+    getBeneficiaresAddresses: () => dispatch(actions.getBeneficiaresAddresses()),
   };
 };
 

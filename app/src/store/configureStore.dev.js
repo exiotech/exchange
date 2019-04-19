@@ -1,10 +1,10 @@
-import { createStore, applyMiddleware, compose } from 'redux'
-import createSagaMiddleware from 'redux-saga'
-import thunk from 'redux-thunk'
-import { createLogger } from 'redux-logger'
+import { createStore, applyMiddleware, compose } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import thunk from 'redux-thunk';
+import { createLogger } from 'redux-logger';
 
-import rootSaga from '../rootSaga'
-import rootReducer from '../reducers'
+import saga from '../middleware/sagas';
+import rootReducer from '../reducers';
 
 const configureStore = preloadedState => {
   const sagaMiddleware = createSagaMiddleware()
@@ -25,7 +25,7 @@ const configureStore = preloadedState => {
     })
   }
 
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(saga)
 
   return store
 }
