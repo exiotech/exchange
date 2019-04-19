@@ -18,6 +18,10 @@ class TokenContainer extends Component {
     };
   }
 
+  componentWillMount() {
+    console.log('THIS.PROPS', this.props)
+  }
+
   componentDidMount() {
     // this.addTokenContract();
     // this.props.setTokenName(this.findTokenName(this.props.currentToken.address));
@@ -40,6 +44,7 @@ class TokenContainer extends Component {
 
   componentDidUpdate(oldProps) {
     // if (this.props.erc20TokenABI.beneficiaresAddresses === oldProps.erc20TokenABI.beneficiaresAddresses) {
+    console.log('THIS.PROPS', this.props)
     //   return;
     // }
     // if (this.props.currentToken.address === oldProps.currentToken.address) {

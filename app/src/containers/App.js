@@ -26,8 +26,11 @@ class App extends Component {
       tokenAddress: tokens[0].address
     };
 
-    this.props.getBeneficiaresAddresses();
     this.props.setTokenAddress(tokens[0].address);
+  }
+
+  componentWillMount() {
+    this.props.getErc20TokenAbi();
   }
 
   componentDidMount() {
@@ -86,8 +89,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    getErc20TokenAbi: () => dispatch(actions.getErc20TokenAbi()),
     setTokenAddress: (address) => dispatch(actions.setTokenAddress(address)),
-    getBeneficiaresAddresses: () => dispatch(actions.getBeneficiaresAddresses()),
   };
 };
 

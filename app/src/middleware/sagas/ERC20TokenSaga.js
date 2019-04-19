@@ -5,9 +5,9 @@ import client from '../../services/clients/ApiClient';
 // import web3 from '../../services/clients/Web3Client';
 import { API_OPTIONS_GET_CONTRACT_ABI } from '../../consts'
 
-function* getBeneficiaresAddresses() {
+function* getErc20TokenAbi() {
   try {
-    yield put(actions.requestedBeneficiaresAddresses());
+    yield put(actions.requestedErc20TokenAbi());
     const data = yield call(() => {
       return client.get('/', {
         params: API_OPTIONS_GET_CONTRACT_ABI,
@@ -17,14 +17,14 @@ function* getBeneficiaresAddresses() {
         });
       }
     );
-    yield put(actions.requestedBeneficiaresAddressesSucceeded(data));
+    yield put(actions.requestedErc20TokenAbiSucceeded(data));
   } catch (error) {
-    yield put(actions.requestedBeneficiaresAddressesFailed());
+    yield put(actions.requestedErc20TokenAbiFailed());
   }
 }
 
 function* erc20TokenABISaga () {
-  yield takeEvery('GET_BENEFICIARES_ADDRESSES', getBeneficiaresAddresses);
+  yield takeEvery('GET_ERC20_TOKEN_ABI', getErc20TokenAbi);
 }
 
 export default erc20TokenABISaga;
